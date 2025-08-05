@@ -1,0 +1,3636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Farm Avançado</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    :root {
+      --primary: #8e44ff;
+      --primary-dark: #5e0fa4;
+      --accent: #00cec9;
+      --text: #f0f0f0;
+      --darker: #0a0a16;
+      --dark-card: #1a1a2e;
+      --warning: #fdcb6e;
+      --danger: #ff4c4c;
+      --secondary: #ff6b6b;
+      --light: #fff;
+      --text-secondary: #c3a6ff;
+      --success: #00b894;
+      --comissao: #fdcb6e;
+      --fac: #00cec9;
+    }
+    body {
+      background: linear-gradient(135deg, var(--darker), #0c1e3e);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      padding: 20px;
+    }
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: radial-gradient(circle at 10% 20%, rgba(142, 68, 255, 0.1) 0%, transparent 20%),
+                  radial-gradient(circle at 90% 80%, rgba(0, 206, 201, 0.1) 0%, transparent 20%);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-tab {
+      padding: 12px 25px;
+      background: rgba(26, 26, 46, 0.7);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-tab.active {
+      background: rgba(26, 26, 46, 0.9);
+      border-bottom: 3px solid var(--primary);
+      color: var(--text-secondary);
+    }
+    .nav-tab:hover:not(.active) {
+      background: rgba(26, 26, 46, 0.8);
+      transform: translateY(-2px);
+    }
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .pagina-1-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .card {
+      background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(16, 16, 32, 0.9));
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3),
+                  0 0 0 1px rgba(142, 68, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4),
+                  0 0 0 1px var(--primary);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(142, 68, 255, 0.3);
+      text-align: center;
+    }
+    .card-header i {
+      color: var(--primary);
+      font-size: 1.8rem;
+      background: rgba(142, 68, 255, 0.1);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+    .card-header h2 {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .btn {
+      padding: 14px;
+      font-size: 1.1rem;
+      background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+      color: var(--light);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      box-shadow: 0 5px 15px rgba(142, 68, 255, 0.3);
+      width: 100%;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(142, 68, 255, 0.4);
+    }
+    .btn:active {
+      transform: translateY(1px);
+    }
+    .btn-secondary {
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+    }
+    .btn-success {
+      background: linear-gradient(45deg, var(--success), #009d7c);
+    }
+    .btn-danger {
+      background: linear-gradient(45deg, var(--danger), #c0392b);
+    }
+    .btn-warning {
+      background: linear-gradient(45deg, var(--warning), #e17055);
+    }
+    .btn-info {
+      background: linear-gradient(45deg, #00cec9, #0984e3);
+    }
+    .btn-sm {
+      padding: 10px;
+      font-size: 0.9rem;
+      width: auto;
+      min-width: 150px;
+      margin: 0 auto;
+      display: block;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .action-buttons .btn {
+      flex: 1;
+      margin-top: 0;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    textarea, input[type="text"], input[type="password"], input[type="number"], select {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+      background: rgba(30, 30, 50, 0.7);
+      color: var(--light);
+      border: 1px solid rgba(142, 68, 255, 0.5);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(0, 206, 201, 0.3);
+      outline: none;
+    }
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    .farm-list {
+      max-height: 500px;
+      overflow-y: auto;
+      margin: 15px 0;
+      padding: 10px;
+      background: rgba(30, 30, 50, 0.5);
+      border-radius: 10px;
+      border: 1px dashed rgba(142, 68, 255, 0.3);
+    }
+    .farm-item {
+      padding: 12px;
+      border-bottom: 1px solid rgba(142, 68, 255, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    .farm-item:hover {
+      background: rgba(142, 68, 255, 0.1);
+    }
+    .farm-item:last-child {
+      border-bottom: none;
+    }
+    .farm-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .farm-info .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .farm-details {
+      flex: 1;
+    }
+    .farm-name {
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .farm-id {
+      font-size: 0.9rem;
+      color: var(--accent);
+    }
+    .farm-count {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--warning);
+      text-align: right;
+      min-width: 120px;
+    }
+    .farm-payment {
+      font-size: 0.9rem;
+      color: var(--success);
+      margin-top: 5px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: 5px;
+      transform: translateY(-1px);
+      position: relative;
+      overflow: hidden;
+    }
+    .tag::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0) 60%
+      );
+      transform: rotate(30deg);
+      animation: shine 3s infinite;
+    }
+    @keyframes shine {
+      0% { transform: rotate(30deg) translate(-30%, -30%); }
+      100% { transform: rotate(30deg) translate(30%, 30%); }
+    }
+    .tag-00 {
+      background: linear-gradient(45deg, #D4AF37, #F9D423);
+      color: #5e4200;
+    }
+    .tag-01 {
+      background: linear-gradient(45deg, #D4AF37, #F9D423);
+      color: #5e4200;
+    }
+    .tag-02 {
+      background: linear-gradient(45deg, #D4AF37, #F9D423);
+      color: #5e4200;
+    }
+    .tag-03 {
+      background: linear-gradient(45deg, #D4AF37, #F9D423);
+      color: #5e4200;
+    }
+    .tag-elite {
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      color: white;
+    }
+    .tag-membro {
+      background: linear-gradient(45deg, var(--success), #27ae60);
+      color: white;
+    }
+    .tag-recruta {
+      background: linear-gradient(45deg, #5DADE2, #3498DB);
+      color: white;
+    }
+    .tag-meta-batida {
+      background: linear-gradient(45deg, #ffd700, #ffcc00);
+      color: #8a6d00 !important;
+      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 215, 0, 0.5);
+      box-shadow: 0 2px 5px rgba(255, 215, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .tag-meta-batida::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0) 60%
+      );
+      transform: rotate(30deg);
+      animation: shine 3s infinite;
+      pointer-events: none;
+    }
+    .tag-meta-batida i {
+      margin-right: 5px;
+      color: #8a6d00;
+    }
+    .tag-ausencia {
+      background: linear-gradient(45deg, #7f8c8d, #95a5a6);
+      color: white;
+    }
+    .members-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .member-card {
+      background: rgba(30, 30, 50, 0.7);
+      border-radius: 10px;
+      padding: 15px;
+      border: 1px solid rgba(142, 68, 255, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .member-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 206, 201, 0.3);
+    }
+    .member-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .member-name {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+    .member-id {
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-left: auto;
+    }
+    .member-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      justify-content: flex-end;
+    }
+    .member-actions .btn {
+      margin-top: 0;
+      width: auto;
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+    .member-card .form-group {
+      margin-bottom: 10px;
+    }
+    .member-card .form-group label {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+    .member-card select.membro-cargo {
+      padding: 8px;
+      font-size: 0.9rem;
+      border-radius: 8px;
+    }
+    .resumo-card {
+      background: rgba(30, 30, 50, 0.7);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--accent);
+    }
+    .resumo-card h3 {
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+    }
+    .resumo-card h3 i {
+      color: var(--accent);
+    }
+    .resumo-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(142, 68, 255, 0.2);
+    }
+    .resumo-item:last-child {
+      border-bottom: none;
+    }
+    .resumo-item strong {
+      color: var(--text-secondary);
+    }
+    .chart-container {
+      background: rgba(30, 30, 50, 0.7);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      position: relative;
+      min-height: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .chart-placeholder {
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    #marca-dagua {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+      user-select: none;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      font-weight: 300;
+    }
+    #marca-dagua .borboleta {
+      color: var(--accent);
+      font-size: 1.2rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .pulse {
+      animation: pulse 3s infinite;
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--accent);
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .tour-step {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(16, 16, 32, 0.95));
+      border-radius: 15px;
+      padding: 20px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--primary);
+      z-index: 1001;
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.3s ease-out;
+    }
+    .tour-step h3 {
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tour-step p {
+      margin-bottom: 15px;
+    }
+    .tour-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+    .tour-nav .btn {
+      margin-top: 0;
+    }
+    .tour-highlight {
+      position: relative;
+      z-index: 1000;
+      animation: pulse 3s infinite;
+      box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.3);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(16, 16, 32, 0.95));
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid var(--primary);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification i {
+      font-size: 1.5rem;
+    }
+    .notification-success {
+      border-left-color: var(--success);
+    }
+    .notification-error {
+      border-left-color: var(--danger);
+    }
+    .notification-warning {
+      border-left-color: var(--warning);
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      .pagina-1-container {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        padding: 20px;
+      }
+      .farm-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .farm-count {
+        align-self: flex-end;
+      }
+      .nav-tabs {
+        flex-direction: column;
+      }
+      .nav-tab {
+        border-radius: 8px;
+        border-bottom: none;
+        border-left: 3px solid transparent;
+      }
+      .nav-tab.active {
+        border-bottom: none;
+        border-left: 3px solid var(--primary);
+      }
+      .members-list {
+        grid-template-columns: 1fr;
+      }
+      .form-group > div {
+        flex-direction: column;
+      }
+      .form-group > div > * {
+        width: 100% !important;
+      }
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-box {
+      background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(16, 16, 32, 0.95));
+      border-radius: 15px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--primary);
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+    .modal-box h3 {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .close-modal:hover {
+      color: var(--accent);
+    }
+    .help-tooltip {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(142, 68, 255, 0.2);
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    .help-tooltip:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .help-content {
+      position: absolute;
+      top: 40px;
+      right: 0;
+      background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(16, 16, 32, 0.95));
+      border-radius: 10px;
+      padding: 15px;
+      width: 250px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--primary);
+      z-index: 10;
+      display: none;
+      backdrop-filter: blur(10px);
+    }
+    .help-tooltip.active .help-content {
+      display: block;
+    }
+    .help-content h4 {
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .help-content p {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .help-content .close-help {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .id-alert {
+      background: rgba(255, 76, 76, 0.2);
+      border-left: 4px solid var(--danger);
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .id-alert i {
+      color: var(--danger);
+    }
+    .guide-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .guide-card {
+      background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(16, 16, 32, 0.9));
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid var(--primary);
+      transition: all 0.3s ease;
+    }
+    .guide-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+    .guide-card h2 {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 1.2rem;
+    }
+    .guide-card h2 i {
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+    .guide-step {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      align-items: flex-start;
+    }
+    .guide-step-number {
+      background: var(--primary);
+      color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .guide-step-content h3 {
+      color: var(--accent);
+      margin-bottom: 5px;
+      font-size: 1rem;
+    }
+    .guide-step-content p {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .guide-note {
+      background: rgba(253, 203, 110, 0.1);
+      border-left: 4px solid var(--warning);
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 0.85rem;
+    }
+    .guide-note strong {
+      color: var(--warning);
+    }
+    .guide-warning {
+      background: rgba(255, 76, 76, 0.1);
+      border-left: 4px solid var(--danger);
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 0.85rem;
+    }
+    .guide-warning strong {
+      color: var(--danger);
+    }
+    .guide-success {
+      background: rgba(0, 184, 148, 0.1);
+      border-left: 4px solid var(--success);
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 0.85rem;
+    }
+    .guide-success strong {
+      color: var(--success);
+    }
+    .guide-example {
+      background: rgba(142, 68, 255, 0.1);
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
+    .guide-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    .guide-tag {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+    .tag-00-example {
+      background: linear-gradient(45deg, #D4AF37, #F9D423);
+      color: #5e4200;
+    }
+    .tag-01-example {
+      background: linear-gradient(45deg, #D4AF37, #F9D423);
+      color: #5e4200;
+    }
+    .tag-elite-example {
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      color: white;
+    }
+    .tag-membro-example {
+      background: linear-gradient(45deg, var(--success), #27ae60);
+      color: white;
+    }
+    .tag-recruta-example {
+      background: linear-gradient(45deg, #5DADE2, #3498DB);
+      color: white;
+    }
+    .tag-meta-example {
+      background: linear-gradient(45deg, #ffd700, #ffcc00);
+      color: #8a6d00;
+      font-weight: bold;
+    }
+    .btn-back {
+      display: inline-block;
+      padding: 12px 25px;
+      background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .btn-back:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(142, 68, 255, 0.4);
+    }
+    .admin-section {
+      background: rgba(30, 30, 50, 0.7);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--accent);
+    }
+    .admin-section h3 {
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .admin-section .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .admin-section .form-group input[type="number"],
+    .admin-section .form-group input[type="text"] {
+      width: auto;
+      max-width: 300px;
+    }
+    .admin-section .form-group label {
+      margin-bottom: 0;
+    }
+    .admin-section .btn {
+      width: auto;
+      align-self: flex-start;
+      margin-top: 15px;
+    }
+    .admin-section .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .admin-section .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .admin-section .checkbox-group input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .admin-section-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .admin-section-grid .admin-section {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+  <div class="modal" id="passwordModal">
+    <div class="modal-box">
+      <button class="close-modal" id="closePasswordModal">&times;</button>
+      <h3><i class="fas fa-lock"></i> Digite a senha</h3>
+      <input type="password" id="modalPassword" placeholder="Digite a senha para continuar">
+      <button class="btn btn-primary" id="confirmPassword">Confirmar</button>
+    </div>
+  </div>
+  <div class="modal" id="newMemberModal">
+    <div class="modal-box">
+      <button class="close-modal" id="closeNewMemberModal">&times;</button>
+      <h3><i class="fas fa-user-plus"></i> Novo Membro Detectado</h3>
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Nome do Membro</label>
+        <input type="text" id="new-member-name" readonly>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-id-card"></i> ID</label>
+        <input type="text" id="new-member-id" readonly>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-tag"></i> Cargo/Tag</label>
+        <select id="new-member-role"></select>
+      </div>
+      <div class="btn-container" style="display: flex; gap: 10px;">
+        <button class="btn btn-success" id="confirmAddMember" style="flex: 1;">
+          <i class="fas fa-check"></i> Confirmar
+        </button>
+        <button class="btn btn-danger" id="cancelAddMember" style="flex: 1;">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="absenceModal">
+    <div class="modal-box">
+      <button class="close-modal" id="closeAbsenceModal">&times;</button>
+      <h3><i class="fas fa-user-minus"></i> Gerenciar Ausências</h3>
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Membro:</label>
+        <select id="absence-member-select">
+          <option value="">Selecione um membro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-calendar-alt"></i> Data de Início:</label>
+        <input type="date" id="absence-start-date">
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-calendar-alt"></i> Data de Fim (opcional):</label>
+        <input type="date" id="absence-end-date">
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-comment-alt"></i> Motivo (opcional):</label>
+        <textarea id="absence-reason" placeholder="Ex: Viagem, doença, etc." rows="3"></textarea>
+      </div>
+      <div class="btn-container" style="display: flex; gap: 10px;">
+        <button class="btn btn-success" id="addAbsenceBtn" style="flex: 1;">
+          <i class="fas fa-plus"></i> Adicionar Ausência
+        </button>
+        <button class="btn btn-danger" id="removeAbsenceBtn" style="flex: 1;">
+          <i class="fas fa-minus"></i> Remover Ausência
+        </button>
+      </div>
+      <div style="margin-top: 20px;">
+        <h4><i class="fas fa-list"></i> Ausências Ativas:</h4>
+        <ul id="active-absences-list" style="list-style: none; padding: 0;">
+          <p style="text-align: center; color: var(--text-secondary);">Nenhuma ausência ativa.</p>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="notification" id="notification">
+    <i class="fas fa-check-circle"></i>
+    <div id="notification-message">Operação concluída com sucesso!</div>
+  </div>
+  <div class="container">
+    <div class="nav-tabs">
+      <div class="nav-tab active" data-tab="pagina-1">
+        <i class="fas fa-tractor"></i> Contador
+      </div>
+      <div class="nav-tab" data-tab="pagina-3">
+        <i class="fas fa-users-cog"></i> Membros
+      </div>
+      <div class="nav-tab" data-tab="pagina-resumos">
+        <i class="fas fa-chart-pie"></i> Resumos
+      </div>
+      <div class="nav-tab" data-tab="pagina-guia">
+        <i class="fas fa-question-circle"></i> Ajuda
+      </div>
+      <div class="nav-tab" data-tab="pagina-admin">
+        <i class="fas fa-cogs"></i> Administração
+      </div>
+      <div class="nav-tab" id="btn-tour">
+        <i class="fas fa-map"></i> Tour
+      </div>
+    </div>
+    <div id="pagina-1" class="tab-content active">
+      <div class="pagina-1-container">
+        <div class="card" id="card-contador">
+          <div class="help-tooltip">
+            <i class="fas fa-question"></i>
+            <div class="help-content">
+              <button class="close-help">&times;</button>
+              <h4><i class="fas fa-info-circle"></i> Como usar</h4>
+              <p>O gerente deve copiar (CTRL+A - CTRL+C) o conteudo da pasta de cada membro do Discord e colar (CTRL+V) aqui.</p>
+              <p>Formato esperado: <strong>NOME SOBRENOME | ID - X Rotas</strong></p>
+            </div>
+          </div>
+          <div class="card-header card-header-centered">
+            <i class="fas fa-tractor"></i>
+            <h2>Contador de Rotas</h2>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-paste"></i> Cole os registros de farm abaixo:</label>
+            <textarea id="registros-farm" placeholder="Cole aqui os registros no formato: Nome | ID - X Rotas&#10;Exemplo: Joao Bobao | 0101 - 2 Rotas"></textarea>
+          </div>
+          <button class="btn btn-success" id="btn-processar">
+            <i class="fas fa-cogs"></i> Processar Registros
+          </button>
+          <div class="form-group" style="margin-top: 20px; background: rgba(253, 203, 110, 0.1); padding: 15px; border-radius: 12px; border-left: 4px solid var(--warning);">
+            <p><i class="fas fa-lightbulb"></i> <strong>Dica:</strong></p>
+            <p>Copie os registros diretamente do Discord no formato:</p>
+            <p><strong>NOME SOBRENOME | ID - X Rotas Entregue a @Fulano</strong></p>
+          </div>
+        </div>
+        <div class="card" id="card-processados">
+          <div class="help-tooltip">
+            <i class="fas fa-question"></i>
+            <div class="help-content">
+              <button class="close-help">&times;</button>
+              <h4><i class="fas fa-info-circle"></i> Como usar</h4>
+              <p>Após processar os dados, clique em "Salvar Dados" para registrar na nuvem.</p>
+              <p><strong>Apenas o responsável</strong> pode fazer isso, usando a senha correta.</p>
+            </div>
+          </div>
+          <div class="card-header card-header-centered">
+            <i class="fas fa-eye"></i>
+            <h2>Dados Processados</h2>
+          </div>
+          <div class="farm-list" id="lista-recente">
+            <p style="text-align: center; color: var(--text-secondary);">Nenhum dado processado ainda</p>
+          </div>
+          <div id="id-alerts-container" style="margin-top: 10px;"></div>
+          <button class="btn btn-secondary" id="btn-salvar">
+            <i class="fas fa-save"></i> Salvar Dados
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="pagina-3" class="tab-content">
+      <div class="card" id="card-membros">
+        <div class="help-tooltip">
+          <i class="fas fa-question"></i>
+          <div class="help-content">
+            <button class="close-help">&times;</button>
+            <h4><i class="fas fa-info-circle"></i> Como usar</h4>
+            <p>Aqui você pode registrar novos membros e definir/editar suas tags.</p>
+            <p>Use as tags para identificar líderes (00, 01, 02, 03), Elite, Membros comuns e Recrutas.</p>
+          </div>
+        </div>
+        <div class="card-header card-header-centered">
+          <i class="fas fa-users-cog"></i>
+          <h2>Gerenciamento de Membros</h2>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-user-plus"></i> Adicionar Novo Membro</label>
+          <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <input type="text" id="novo-membro-nome" placeholder="Nome do Membro" style="flex: 2;">
+            <input type="text" id="novo-membro-id" placeholder="ID" style="flex: 1;">
+            <select id="novo-membro-cargo"></select>
+            <button class="btn btn-success" id="btn-adicionar-membro" style="flex: 1;">
+              <i class="fas fa-plus"></i> Adicionar
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-users"></i> Adicionar Múltiplos Membros</label>
+          <textarea id="novos-membros-em-massa" placeholder="Cole aqui a lista de membros no formato: Nome | ID&#10;Exemplo:&#10;Joao Bobao | 0101&#10;Maria Fubanga | 0202" style="min-height: 100px;"></textarea>
+          <button class="btn btn-secondary" id="btn-adicionar-em-massa" style="margin-top: 10px;">
+            <i class="fas fa-user-plus"></i> Adicionar Múltiplos Membros
+          </button>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-info" id="btn-gerenciar-ausencias">
+            <i class="fas fa-calendar-times"></i> Gerenciar Ausências
+          </button>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-search"></i> Buscar Membro</label>
+          <input type="text" id="filtro-membros" placeholder="Digite para filtrar membros...">
+        </div>
+        <div class="members-list" id="lista-membros">
+          <p style="text-align: center; color: var(--text-secondary);">Carregando membros...</p>
+        </div>
+      </div>
+    </div>
+    <div id="pagina-resumos" class="tab-content">
+      <div class="card">
+        <div class="help-tooltip">
+          <i class="fas fa-question"></i>
+          <div class="help-content">
+            <button class="close-help">&times;</button>
+            <h4><i class="fas fa-info-circle"></i> Como usar</h4>
+            <p>Aqui você pode analisar quem está farmando e quem não está cumprindo.</p>
+            <p>O sistema alerta sobre membros que não farmam há mais de 3 dias.</p>
+            <p>Elites que não farmam também são destacados.</p>
+          </div>
+        </div>
+        <div class="card-header card-header-centered">
+          <i class="fas fa-chart-pie"></i>
+          <h2>Resumos e Relatórios</h2>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="btn-carregar-resumos">
+            <i class="fas fa-sync-alt"></i> Atualizar
+          </button>
+          <button class="btn btn-warning" id="btn-zerar-semana">
+            <i class="fas fa-calendar-week"></i> Zerar Semanal
+          </button>
+          <button class="btn btn-info" id="btn-exportar-dados">
+            <i class="fas fa-file-export"></i> Exportar
+          </button>
+          <button class="btn btn-primary" id="btn-detector-inteligente">
+            <i class="fas fa-search-dollar"></i> Detector Inteligente
+          </button>
+        </div>
+        <div id="resumo-geral-container" style="margin-top: 20px;">
+          <div class="resumo-card">
+            <h3><i class="fas fa-globe-americas"></i> Resumo Semanal</h3>
+            <p style="text-align: center; color: var(--text-secondary);">Clique em "Atualizar Resumos" para carregar os dados</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="farmChart"></canvas>
+          <div class="chart-placeholder" style="display: none;">
+            <i class="fas fa-chart-bar" style="font-size: 2rem; margin-bottom: 10px;"></i>
+            <p>Gráficos de desempenho serão exibidos aqui</p>
+          </div>
+        </div>
+        <div class="farm-list" id="resumo-membros-container" style="margin-top: 20px;">
+          <p style="text-align: center; color: var(--text-secondary);">Nenhum dado de membros carregado</p>
+        </div>
+      </div>
+    </div>
+    <div id="pagina-guia" class="tab-content">
+      <div class="card">
+        <div class="card-header card-header-centered">
+          <i class="fas fa-book"></i>
+          <h2>Guia Rápido do Sistema</h2>
+        </div>
+        <div class="guide-container">
+          <div class="guide-card">
+            <h2><i class="fas fa-info-circle"></i> Visão Geral</h2>
+            <p>O Sistema de Farm automatiza o gerenciamento de rotas, pagamentos e desempenho dos membros. Nosso objetivo é simplificar a contagem de rotas e pagamentos para sua organização.</p>
+          </div>
+
+          <div class="guide-card">
+            <h2><i class="fas fa-tractor"></i> Contador de Rotas</h2>
+            <div class="guide-step">
+              <div class="guide-step-number">1</div>
+              <div class="guide-step-content">
+                <h3>Cole os Registros</h3>
+                <p>Na aba "Contador", cole as mensagens do Discord no formato: <strong>NOME SOBRENOME | ID - X Rotas</strong>.</p>
+                <div class="guide-example">
+                  Exemplo: Joao Bobao | 0101 - 2 Rotas
+                </div>
+                <div class="guide-note">
+                  O sistema ignora textos adicionais e foca apenas no registro de farm.
+                </div>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-number">2</div>
+              <div class="guide-step-content">
+                <h3>Processar e Salvar</h3>
+                <p>Clique em "Processar Registros" para analisar os dados. Após verificar, clique em "Salvar Dados" para registrar na nuvem (requer senha de administrador).</p>
+                <div class="guide-warning">
+                  IDs não cadastrados ou nomes inconsistentes serão destacados para correção.
+                </div>
+                <div class="guide-success">
+                  Cada rota vale R$ <span id="guide-valor-rota">15.000</span> (2 rotas = R$ <span id="guide-valor-2rotas">30.000</span>).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <h2><i class="fas fa-users-cog"></i> Gerenciamento de Membros</h2>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fas fa-user-plus"></i></div>
+              <div class="guide-step-content">
+                <h3>Adicionar Membros</h3>
+                <p>Adicione membros individualmente (Nome, ID, Cargo) ou em massa (lista 'Nome | ID').</p>
+                <div class="guide-warning">
+                  O ID deve ser único e corresponder ao usado nos registros de farm.
+                </div>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fas fa-tag"></i></div>
+              <div class="guide-step-content">
+                <h3>Tags de Cargo</h3>
+                <p>Defina a hierarquia dos membros com tags como:</p>
+                <div class="guide-tags">
+                  <span class="guide-tag tag-00-example">00 - LÍDER</span>
+                  <span class="guide-tag tag-elite-example">ELITE</span>
+                  <span class="guide-tag tag-membro-example">MEMBRO</span>
+                  <span class="guide-tag tag-recruta-example">RECRUTA</span>
+                </div>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fas fa-calendar-times"></i></div>
+              <div class="guide-step-content">
+                <h3>Gerenciar Ausências</h3>
+                <p>Registre membros ausentes. O Detector Inteligente os ignorará, evitando alertas de "sem farm".</p>
+                <div class="guide-note">
+                  Membros com ausência declarada não serão incluídos nos alertas de inatividade.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <h2><i class="fas fa-chart-pie"></i> Resumos e Relatórios</h2>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fas fa-sync-alt"></i></div>
+              <div class="guide-step-content">
+                <h3>Atualizar Resumos</h3>
+                <p>Carrega os dados mais recentes de farm e atualiza os resumos gerais e individuais, incluindo o gráfico de desempenho.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fas fa-search-dollar"></i></div>
+              <div class="guide-step-content">
+                <h3>Detector Inteligente</h3>
+                <p>Identifica rapidamente membros que não entregaram farm na semana, mesmo que não apareçam nos registros processados. Útil para identificar inativos.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fas fa-calendar-week"></i></div>
+              <div class="guide-step-content">
+                <h3>Zerar Contagem Semanal</h3>
+                <p>Ao final da semana, zere a contagem de rotas semanais de todos os membros. A meta semanal padrão é de <span id="guide-meta-rotas">10</span> rotas.</p>
+                <div class="guide-warning">
+                  <strong>Importante:</strong> Exporte os dados antes de zerar a contagem!
+                </div>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fas fa-file-export"></i></div>
+              <div class="guide-step-content">
+                <h3>Exportar Dados</h3>
+                <p>Gere um relatório completo em formato de texto com todos os dados de farm e membros para arquivamento ou compartilhamento.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fab fa-discord"></i></div>
+              <div class="guide-step-content">
+                <h3>Exportar para Discord</h3>
+                <p>Envie um resumo configurável diretamente para um canal do Discord, utilizando o webhook configurado na aba "Administração".</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <h2><i class="fas fa-cogs"></i> Administração e Configurações</h2>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fas fa-link"></i></div>
+              <div class="guide-step-content">
+                <h3>Webhook do Discord</h3>
+                <p>Insira a URL do seu webhook do Discord e selecione quais tipos de relatórios você deseja que o sistema envie automaticamente.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-number"><i class="fas fa-dollar-sign"></i></div>
+              <div class="guide-step-content">
+                <h3>Valores e Metas</h3>
+                <p>Personalize o valor pago por rota, a meta semanal de rotas e a quantidade de rotas para a tag "Meta Batida" (<span id="guide-meta-batida-rotas">10</span>+ rotas).</p>
+                <div class="guide-tags">
+                  <span class="guide-tag tag-meta-example">META BATIDA</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <center>
+          <a href="#" class="btn-back" id="btn-voltar-sistema"><i class="fas fa-arrow-left"></i> Voltar ao Sistema</a>
+        </center>
+      </div>
+    </div>
+    <div id="pagina-admin" class="tab-content">
+      <div class="card">
+        <div class="card-header card-header-centered">
+          <i class="fas fa-cogs"></i>
+          <h2>Configurações de Administração</h2>
+        </div>
+        <div class="admin-section-grid">
+          <div class="admin-section">
+            <h3><i class="fas fa-link"></i> Webhook do Discord</h3>
+            <div class="form-group">
+              <label for="discord-webhook-url"><i class="fab fa-discord"></i> URL do Webhook:</label>
+              <input type="text" id="discord-webhook-url" placeholder="Cole a URL do webhook do Discord aqui">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-clipboard-list"></i> Enviar Relatório de Resumo:</label>
+              <div class="checkbox-group">
+                <label><input type="checkbox" id="webhook-send-general-summary"> Resumo Geral</label>
+                <!-- REMOVIDO: <label><input type="checkbox" id="webhook-send-member-summary"> Resumo por Membro</label> -->
+                <label><input type="checkbox" id="webhook-send-no-farm-members"> Membros Sem Farm</label>
+                <!-- REMOVIDO: <label><input type="checkbox" id="webhook-send-absent-members"> Membros Ausentes</label> -->
+                <label><input type="checkbox" id="webhook-send-top-performers"> Top Desempenho (Semanal)</label>
+                <label><input type="checkbox" id="webhook-send-all-members-list"> Lista Completa de Membros</label>
+                <label><input type="checkbox" id="webhook-send-config-summary"> Resumo de Configurações</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-file-alt"></i> Formato de Exportação para Discord:</label>
+              <div class="checkbox-group">
+                <label><input type="radio" name="webhook-export-format" id="webhook-format-text" value="text" checked> Enviar como Texto</label>
+                <label><input type="radio" name="webhook-export-format" id="webhook-format-file" value="file"> Enviar como Arquivo (.txt)</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-toggle-on"></i> Ativar Botão "Exportar para Discord":</label>
+              <div class="checkbox-group">
+                <label><input type="checkbox" id="webhook-enable-export-button"> Habilitar envio para Discord</label>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <button class="btn btn-primary" id="save-webhook-settings" style="flex: 1;">
+                <i class="fas fa-save"></i> Salvar Configurações
+              </button>
+              <button class="btn btn-info" id="test-webhook" style="flex: 1;">
+                <i class="fas fa-paper-plane"></i> Testar Webhook
+              </button>
+              <button class="btn btn-info" id="btn-exportar-discord" style="flex: 1;">
+                <i class="fab fa-discord"></i> Exportar para Discord
+              </button>
+            </div>
+          </div>
+          <div class="admin-section">
+            <h3><i class="fas fa-dollar-sign"></i> Valores e Metas</h3>
+            <div class="form-group">
+              <label for="config-valor-rota"><i class="fas fa-money-bill-wave"></i> Valor por Rota (R$):</label>
+              <input type="number" id="config-valor-rota" min="1" value="15000">
+            </div>
+            <div class="form-group">
+              <label for="config-meta-semanal"><i class="fas fa-bullseye"></i> Meta Semanal de Rotas:</label>
+              <input type="number" id="config-meta-semanal" min="1" value="10">
+            </div>
+            <div class="form-group">
+              <label for="config-meta-batida-rotas"><i class="fas fa-trophy"></i> Rotas para "Meta Batida":</label>
+              <input type="number" id="config-meta-batida-rotas" min="1" value="10">
+            </div>
+            <button class="btn btn-primary" id="save-config-settings">
+              <i class="fas fa-save"></i> Salvar Configurações
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="marca-dagua">
+    <span>Sistema de Farm v3.0</span>
+    <span class="borboleta">🦋</span>
+    <span>Criado por Sammy Lee | Discord: @ssammylee</span>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const JSONBIN_SINGLE_BIN_ID = "689223b57b4b8670d8ade589"; // Nova BIN ID
+    const JSONBIN_API_KEY = "$2a$10$B2ei2N0lbw3uuXk7JcOdMOtYxjT/lp179qx0hDuDenkTfRD9Tdj1O"; // Sua Master Key
+
+    const JSONBIN_SINGLE_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_SINGLE_BIN_ID}`;
+    const JSONBIN_SINGLE_LATEST = `https://api.jsonbin.io/v3/b/${JSONBIN_SINGLE_BIN_ID}/latest`;
+
+    let farmData = {};
+    let membrosData = {};
+    let configData = {
+      valorPorRota: 15000,
+      metaSemanal: 10,
+      rotasMetaBatida: 10,
+      webhookUrl: "",
+      webhookSendGeneralSummary: false,
+      webhookSendMemberSummary: false, // Removido do HTML, mas mantido para compatibilidade
+      webhookSendNoFarmMembers: false,
+      webhookSendAbsentMembers: false, // Removido do HTML, mas mantido para compatibilidade
+      webhookSendTopPerformers: false,
+      webhookSendAllMembersList: false,
+      webhookSendConfigSummary: false,
+      webhookExportFormat: "text",
+      webhookEnableExportButton: false
+    };
+    let absenceData = {};
+    let resumosData = {}; // Para armazenar os resumos gerados
+
+    let isAdminAuthenticated = false;
+    let dadosRecentes = {};
+    const SENHA_ADM = "adm00";
+    let novosMembrosDetectados = [];
+    let tourStep = 0;
+    let farmChartInstance = null;
+
+    const tourSteps = [
+      {
+        title: "Bem-vindo ao Sistema de Farm",
+        content: "Este tour rápido vai te mostrar como usar as principais funcionalidades do sistema.",
+        element: null,
+        tab: "pagina-1"
+      },
+      {
+        title: "Contador de Rotas",
+        content: "Cole aqui os registros copiados do Discord no formato: Nome | ID - X Rotas. O sistema ignora qualquer texto além desse formato (datas, horas, nick de discord, etc), focando apenas no registro de farm. Também identifica automaticamente se o ID/nome está correto e detecta membros não registrados.",
+        element: "#card-contador",
+        highlight: "#registros-farm",
+        tab: "pagina-1"
+      },
+      {
+        title: "Processar Registros",
+        content: "Após colar os registros, clique neste botão para que o sistema analise os dados e calcule as rotas e pagamentos.",
+        element: "#card-contador",
+        highlight: "#btn-processar",
+        tab: "pagina-1"
+      },
+      {
+        title: "Dados Processados",
+        content: "Aqui você verá os dados que foram processados. Verifique se estão corretos. Se houver IDs incorretos ou novos membros, o sistema irá alertar.",
+        element: "#card-processados",
+        highlight: "#lista-recente",
+        tab: "pagina-1"
+      },
+      {
+        title: "Salvar Dados",
+        content: "Após verificar os dados processados, clique em 'Salvar Dados' para registrar as informações na nuvem. Esta ação requer uma senha de administrador.",
+        element: "#card-processados",
+        highlight: "#btn-salvar",
+        tab: "pagina-1"
+      },
+      {
+        title: "Gerenciamento de Membros",
+        content: "Nesta aba, você pode adicionar novos membros, editar seus cargos (tags) e remover membros. É crucial manter esta lista atualizada para o bom funcionamento do sistema.",
+        element: ".nav-tab[data-tab='pagina-3']",
+        tab: "pagina-3"
+      },
+      {
+        title: "Adicionar Membro Individualmente",
+        content: "Use esta seção para adicionar um único membro, preenchendo seu nome, ID e selecionando o cargo apropriado.",
+        element: "#card-membros",
+        highlight: "#btn-adicionar-membro",
+        tab: "pagina-3"
+      },
+      {
+        title: "Adicionar Múltiplos Membros",
+        content: "Para adicionar vários membros de uma vez, cole uma lista no formato 'Nome | ID' nesta caixa de texto e clique no botão correspondente.",
+        element: "#card-membros",
+        highlight: "#btn-adicionar-em-massa",
+        tab: "pagina-3"
+      },
+      {
+        title: "Gerenciar Ausências",
+        content: "Clique aqui para registrar membros que estão ausentes (por viagem, doença, etc.). Membros com ausência declarada não serão marcados como 'sem farm' pelo Detector Inteligente.",
+        element: "#card-membros",
+        highlight: "#btn-gerenciar-ausencias",
+        tab: "pagina-3"
+      },
+      {
+        title: "Resumos e Relatórios",
+        content: "Esta aba oferece uma visão geral do desempenho de farm. Você pode atualizar os resumos, zerar a contagem semanal e exportar os dados.",
+        element: ".nav-tab[data-tab='pagina-resumos']",
+        tab: "pagina-resumos"
+      },
+      {
+        title: "Atualizar Resumos",
+        content: "Clique neste botão para carregar os dados mais recentes de farm e atualizar os resumos e o gráfico de desempenho.",
+        element: "#pagina-resumos",
+        highlight: "#btn-carregar-resumos",
+        tab: "pagina-resumos"
+      },
+      {
+        title: "Detector Inteligente",
+        content: "Esta é uma ferramenta poderosa! Ela verifica todos os membros cadastrados e identifica quem não entregou farm na semana, mesmo que não tenha aparecido nos registros processados. Útil para identificar inativos.",
+        element: "#pagina-resumos",
+        highlight: "#btn-detector-inteligente",
+        tab: "pagina-resumos"
+      },
+      {
+        title: "Zerar Semanal",
+        content: "Ao final da semana, use este botão para zerar a contagem de rotas semanais de todos os membros. Lembre-se de exportar os dados antes de zerar!",
+        element: "#pagina-resumos",
+        highlight: "#btn-zerar-semana",
+        tab: "pagina-resumos"
+      },
+      {
+        title: "Exportar Dados",
+        content: "Gere um arquivo de texto com um relatório completo de todos os dados de farm e membros. Ideal para arquivamento ou compartilhamento externo.",
+        element: "#pagina-resumos",
+        highlight: "#btn-exportar-dados",
+        tab: "pagina-resumos"
+      },
+      {
+        title: "Página de Administração",
+        content: "Aqui você encontrará configurações avançadas do sistema, como a integração com o Discord Webhook e a personalização dos valores de rota e metas.",
+        element: ".nav-tab[data-tab='pagina-admin']",
+        tab: "pagina-admin"
+      },
+      {
+        title: "Configurar Webhook Discord",
+        content: "Insira a URL do seu webhook do Discord e selecione quais tipos de relatórios você deseja que o sistema envie automaticamente para o seu canal.",
+        element: "#pagina-admin",
+        highlight: "#discord-webhook-url",
+        tab: "pagina-admin"
+      },
+      {
+        title: "Exportar para Discord",
+        content: "Envie um resumo configurável diretamente para um canal do Discord, utilizando o webhook configurado na aba 'Administração'.",
+        element: "#pagina-admin",
+        highlight: "#btn-exportar-discord",
+        tab: "pagina-admin"
+      },
+      {
+        title: "Ajustar Valores e Metas",
+        content: "Personalize o valor pago por cada rota, a meta semanal de rotas e a quantidade de rotas necessárias para que um membro receba a tag 'Meta Batida'.",
+        element: "#pagina-admin",
+        highlight: "#config-valor-rota",
+        tab: "pagina-admin"
+      },
+      {
+        title: "Pronto para começar!",
+        content: "Você concluiu o tour! Agora você está pronto para usar o sistema. Acesse a aba 'Ajuda' se precisar de mais informações. Lembre-se que algumas ações requerem senha de administrador para serem executadas.",
+        element: null,
+        tab: "pagina-1"
+      }
+    ];
+
+    const CARGOS_DISPONIVEIS = [
+      { value: "", text: "Sem Tag" },
+      { value: "00", text: "00 - Líder" },
+      { value: "01", text: "01 - Líder" },
+      { value: "02", text: "02 - Líder" },
+      { value: "03", text: "03 - Líder" },
+      { value: "ELITE", text: "Elite" },
+      { value: "MEMBRO", text: "Membro" },
+      { value: "RECRUTA", text: "Recruta" }
+    ];
+
+    function calcularPagamento(rotas) {
+      return Math.floor(rotas * configData.valorPorRota);
+    }
+
+    function formatarMoeda(valor) {
+      return 'R$ ' + Math.floor(valor).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+    }
+
+    function formatarData(dataISO) {
+      const data = new Date(dataISO);
+      return data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR');
+    }
+
+    function showNotification(message, type = 'success', duration = 3000) {
+      const notification = document.getElementById('notification');
+      const notificationMessage = document.getElementById('notification-message');
+      notification.className = `notification notification-${type}`;
+      notificationMessage.textContent = message;
+      notification.classList.add('show');
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, duration);
+    }
+
+    function startTour() {
+      document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+      document.querySelector(".nav-tab[data-tab='pagina-1']").classList.add("active");
+      document.getElementById("pagina-1").classList.add("active");
+      tourStep = 0;
+      updateTour();
+      showTourStep();
+    }
+
+    function showTourStep() {
+      const step = tourSteps[tourStep];
+      if (step.tab) {
+        document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        document.querySelector(`.nav-tab[data-tab="${step.tab}"]`).classList.add("active");
+        document.getElementById(step.tab).classList.add("active");
+      }
+      let tourElement = document.getElementById('tour-step');
+      if (!tourElement) {
+        tourElement = document.createElement('div');
+        tourElement.id = 'tour-step';
+        tourElement.className = 'tour-step';
+        document.body.appendChild(tourElement);
+      }
+      tourElement.innerHTML = `
+        <h3><i class="fas fa-map-marker-alt"></i> ${step.title}</h3>
+        <p>${step.content}</p>
+        <div class="tour-nav">
+          <button class="btn btn-secondary" id="tour-prev" ${tourStep === 0 ? 'disabled' : ''}>
+            <i class="fas fa-arrow-left"></i> Anterior
+          </button>
+          <button class="btn btn-primary" id="tour-next">
+            ${tourStep === tourSteps.length - 1 ? 'Concluir' : 'Próximo <i class="fas fa-arrow-right"></i>'}
+          </button>
+        </div>
+      `;
+      document.querySelectorAll('.tour-highlight').forEach(el => {
+        el.classList.remove('tour-highlight');
+      });
+      if (step.element) {
+        const element = document.querySelector(step.element);
+        if (element) {
+          element.classList.add('tour-highlight');
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+      if (step.highlight) {
+        const highlightElement = document.querySelector(step.highlight);
+        if (highlightElement) {
+          highlightElement.classList.add('tour-highlight');
+          highlightElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+      document.getElementById('tour-prev').addEventListener('click', () => {
+        if (tourStep > 0) {
+          tourStep--;
+          updateTour();
+        }
+      });
+      document.getElementById('tour-next').addEventListener('click', () => {
+        if (tourStep < tourSteps.length - 1) {
+          tourStep++;
+          updateTour();
+        } else {
+          document.getElementById('tour-step').remove();
+          document.querySelectorAll('.tour-highlight').forEach(el => {
+            el.classList.remove('tour-highlight');
+          });
+          document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+          document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+          document.querySelector(".nav-tab[data-tab='pagina-1']").classList.add("active");
+          document.getElementById("pagina-1").classList.add("active");
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    }
+
+    function updateTour() {
+      showTourStep();
+    }
+
+    async function carregarDadosAPI(url) {
+      try {
+        const response = await fetch(url, {
+          headers: {
+            "X-Master-Key": JSONBIN_API_KEY,
+            "Content-Type": "application/json"
+          }
+        });
+        if (!response.ok) {
+          if (response.status === 404) {
+            console.warn(`Recurso não encontrado (404) em ${url}. Retornando objeto vazio.`);
+            return {};
+          }
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.record || {};
+      } catch (error) {
+        console.error(`Erro ao carregar dados de ${url}:`, error);
+        throw error;
+      }
+    }
+
+    async function salvarDadosAPI(url, dados) {
+      try {
+        const response = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": JSONBIN_API_KEY,
+            "X-Bin-Versioning": "false"
+          },
+          body: JSON.stringify(dados)
+        });
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`Erro ao salvar dados em ${url}: Status ${response.status}, Resposta: ${errorText}`);
+          throw new Error(`Erro HTTP: ${response.status} - ${errorText}`);
+        }
+        return true;
+      } catch (error) {
+        console.error(`Erro ao salvar dados em ${url}:`, error);
+        throw error;
+      }
+    }
+
+    async function gerarESalvarResumos() {
+      try {
+        const hoje = new Date();
+        const diaSemana = hoje.getDay();
+        const inicioSemana = new Date(hoje);
+        inicioSemana.setDate(hoje.getDate() - diaSemana);
+        inicioSemana.setHours(0, 0, 0, 0);
+
+        resumosData = {
+          geral: {
+            totalRotas: Object.values(farmData).reduce((sum, { rotas }) => sum + (rotas || 0), 0),
+            totalRotasSemana: Object.values(farmData).reduce((sum, { rotasSemana }) => sum + (rotasSemana || 0), 0),
+            totalPagamento: Object.values(farmData).reduce((sum, { pagamento }) => sum + (pagamento || 0), 0),
+            totalPagamentoSemana: Object.values(farmData).reduce((sum, { pagamentoSemana }) => sum + (pagamentoSemana || 0), 0),
+            totalMembros: Object.keys(membrosData).length,
+            dataAtualizacao: new Date().toISOString(),
+            inicioSemana: inicioSemana.toISOString()
+          },
+          membros: Object.entries(farmData).map(([id, dados]) => {
+            const membro = membrosData[id] || { nome: "Desconhecido", cargo: "" };
+            return {
+              id,
+              nome: membro.nome,
+              cargo: membro.cargo,
+              totalRotas: dados.rotas || 0,
+              totalRotasSemana: dados.rotasSemana || 0,
+              metaBatida: dados.rotasSemana >= configData.rotasMetaBatida,
+              totalPagamento: dados.pagamento || 0,
+              totalPagamentoSemana: dados.pagamentoSemana || 0,
+              ultimaAtualizacao: dados.ultimaAtualizacao || new Date().toISOString()
+            };
+          }),
+          dataGeracao: new Date().toISOString()
+        };
+
+        // Não salva resumos separadamente, apenas atualiza a variável local
+        return resumosData;
+      } catch (error) {
+        console.error("Erro ao gerar resumos:", error);
+        throw error;
+      }
+    }
+
+    async function carregarEExibirResumos() {
+      try {
+        const btn = document.getElementById("btn-carregar-resumos");
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Carregando...';
+        btn.disabled = true;
+
+        await gerarESalvarResumos(); // Gera os resumos com base nos dados atuais
+
+        const resumos = resumosData; // Usa os resumos gerados localmente
+
+        const resumoGeralHTML = `
+          <div class="resumo-card">
+            <h3><i class="fas fa-globe-americas"></i> Resumo Semanal</h3>
+            <div class="resumo-item">
+              <span><strong>Período:</strong></span>
+              <span>${resumos.geral?.inicioSemana ? formatarData(resumos.geral.inicioSemana) : 'N/A'} a ${resumos.geral?.dataAtualizacao ? formatarData(resumos.geral.dataAtualizacao) : 'N/A'}</span>
+            </div>
+            <div class="resumo-item">
+              <span><strong>Meta Semanal (por membro):</strong></span>
+              <span>${configData.metaSemanal} Rotas</span>
+            </div>
+            <div class="resumo-item">
+              <span><strong>Total de Rotas (semana):</strong></span>
+              <span>${resumos.geral?.totalRotasSemana || 0}</span>
+            </div>
+            <div class="resumo-item" style="${resumos.geral?.totalMembros > 0 ? '' : 'display:none'}">
+              <span><strong>Média por membro:</strong></span>
+              <span>${resumos.geral?.totalMembros ? (resumos.geral.totalRotasSemana / resumos.geral.totalMembros).toFixed(1) : 0} Rotas</span>
+            </div>
+            <div class="resumo-item">
+              <span><strong>Pagamento Total (semana):</strong></span>
+              <span>${formatarMoeda(resumos.geral?.totalPagamentoSemana || 0)}</span>
+            </div>
+          </div>
+        `;
+        document.getElementById("resumo-geral-container").innerHTML = resumoGeralHTML;
+
+        if (resumos.membros && resumos.membros.length > 0) {
+          const membrosValidos = resumos.membros.filter(m => membrosData[m.id] && membrosData[m.id].nome === m.nome);
+          if (membrosValidos.length > 0) {
+            const resumoMembrosHTML = membrosValidos.map(membro => {
+              const tag = getMemberTag(membro.nome, membro.totalRotasSemana);
+              const isAbsent = isMemberAbsent(membro.id);
+              let statusText = '';
+              let statusColor = '';
+              let borderColor = '';
+
+              if (isAbsent) {
+                statusText = '<span style="color: var(--warning);"><i class="fas fa-calendar-times"></i> Ausência Declarada</span>';
+                borderColor = 'var(--warning)';
+              } else if (membro.totalRotasSemana >= configData.metaSemanal) {
+                statusText = '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Meta batida</span>';
+                borderColor = 'var(--success)';
+              } else {
+                statusText = '<span style="color: var(--danger);"><i class="fas fa-exclamation-circle"></i> Faltam ' + (configData.metaSemanal - membro.totalRotasSemana) + ' rotas</span>';
+                borderColor = 'var(--danger)';
+              }
+
+              return `
+                <div class="farm-item fade-in" style="border-left: 4px solid ${borderColor};">
+                  <div class="farm-info">
+                    <div class="avatar">${membro.nome.charAt(0).toUpperCase()}</div>
+                    <div class="farm-details">
+                      <div class="farm-name">${membro.nome}${tag}</div>
+                      <div class="farm-id">ID: ${membro.id}</div>
+                      <div class="farm-meta" style="font-size: 0.8rem; margin-top: 5px;">
+                        ${statusText}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="farm-count">
+                    ${membro.totalRotasSemana} Rotas
+                    <div class="farm-payment">${formatarMoeda(membro.totalPagamentoSemana)}</div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+            document.getElementById("resumo-membros-container").innerHTML = resumoMembrosHTML;
+            renderFarmChart(membrosValidos);
+          } else {
+            document.getElementById("resumo-membros-container").innerHTML = `
+              <p style="text-align: center; color: var(--text-secondary);">
+                Nenhum dado de membros válido encontrado
+              </p>
+            `;
+            renderFarmChart([]);
+          }
+        } else {
+          document.getElementById("resumo-membros-container").innerHTML = `
+            <p style="text-align: center; color: var(--text-secondary);">
+              Nenhum dado de membros encontrado nos resumos
+            </p>
+          `;
+          renderFarmChart([]);
+        }
+
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      } catch (error) {
+        console.error("Erro ao carregar resumos:", error);
+        document.getElementById("resumo-geral-container").innerHTML = `
+          <div class="resumo-card" style="border-left-color: var(--danger);">
+            <h3><i class="fas fa-exclamation-triangle"></i> Erro ao Carregar Resumos</h3>
+            <p style="color: var(--danger);">${error.message}</p>
+            <p>Verifique sua conexão com a internet e tente novamente.</p>
+          </div>
+        `;
+        const btn = document.getElementById("btn-carregar-resumos");
+        btn.innerHTML = '<i class="fas fa-redo"></i> Tentar Novamente';
+        btn.disabled = false;
+      }
+    }
+
+    function renderFarmChart(membros) {
+      const ctx = document.getElementById('farmChart').getContext('2d');
+      const chartPlaceholder = document.querySelector('.chart-placeholder');
+
+      if (membros.length === 0) {
+        if (farmChartInstance) {
+          farmChartInstance.destroy();
+          farmChartInstance = null;
+        }
+        chartPlaceholder.style.display = 'flex';
+        return;
+      } else {
+        chartPlaceholder.style.display = 'none';
+      }
+
+      const membrosParaGrafico = membros.filter(m => !isMemberAbsent(m.id));
+      const labels = membrosParaGrafico.map(m => m.nome);
+      const data = membrosParaGrafico.map(m => m.totalRotasSemana);
+
+      const getGradient = (ctx, chartArea, isMetaBatida) => {
+        const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+        if (isMetaBatida) {
+          gradient.addColorStop(0, 'rgba(142, 68, 255, 0.9)');
+          gradient.addColorStop(1, 'rgba(0, 206, 201, 0.9)');
+        } else {
+          gradient.addColorStop(0, 'rgba(255, 76, 76, 0.9)');
+          gradient.addColorStop(1, 'rgba(253, 203, 110, 0.9)');
+        }
+        return gradient;
+      };
+
+      if (farmChartInstance) {
+        farmChartInstance.destroy();
+      }
+
+      farmChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Rotas Semanais',
+            data: data,
+            backgroundColor: function(context) {
+              const chart = context.chart;
+              const { ctx, chartArea } = chart;
+              if (!chartArea) {
+                return 'rgba(142, 68, 255, 0.9)';
+              }
+              const isMetaBatida = context.raw >= configData.metaSemanal;
+              return getGradient(ctx, chartArea, isMetaBatida);
+            },
+            borderColor: function(context) {
+              const isMetaBatida = context.raw >= configData.metaSemanal;
+              return isMetaBatida ? 'rgba(0, 206, 201, 1)' : 'rgba(255, 76, 76, 1)';
+            },
+            borderWidth: 1,
+            borderRadius: 8,
+            barPercentage: 0.8,
+            categoryPercentage: 0.8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  label += context.parsed.y + ' Rotas';
+                  return label;
+                },
+                title: function(context) {
+                  return context[0].label;
+                }
+              },
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              titleColor: '#000',
+              bodyColor: '#000',
+              borderColor: 'var(--primary)',
+              borderWidth: 1,
+              cornerRadius: 8,
+              displayColors: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Número de Rotas',
+                color: '#fff',
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                }
+              },
+              ticks: {
+                color: '#fff',
+                font: {
+                  size: 12
+                },
+                precision: 0
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)',
+                drawBorder: false
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Membros',
+                color: '#fff',
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                }
+              },
+              ticks: {
+                color: '#fff',
+                font: {
+                  size: 12
+                },
+                maxRotation: 45,
+                minRotation: 45,
+                autoSkip: false
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)',
+                drawBorder: false
+              }
+            }
+          },
+          animation: {
+            duration: 1500,
+            easing: 'easeOutBounce',
+            onComplete: function() {
+              const chartInstance = this;
+              const ctx = chartInstance.ctx;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+              ctx.fillStyle = '#fff';
+              chartInstance.data.datasets.forEach(function(dataset) {
+                for (let i = 0; i < dataset.data.length; i++) {
+                  const model = dataset.data[i];
+                  const meta = chartInstance.getDatasetMeta(0);
+                  const bar = meta.data[i];
+                  const dataValue = dataset.data[i];
+                  ctx.fillText(dataValue, bar.x, bar.y - 5);
+                }
+              });
+            }
+          }
+        }
+      });
+    }
+
+    function isMemberAbsent(memberId) {
+      const absence = absenceData[memberId];
+      if (!absence) return false;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const startDate = new Date(absence.startDate);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = absence.endDate ? new Date(absence.endDate) : null;
+      if (endDate) endDate.setHours(0, 0, 0, 0);
+
+      if (endDate) {
+        return today >= startDate && today <= endDate;
+      } else {
+        return today >= startDate;
+      }
+    }
+
+    async function loadAbsenceData() {
+      // Absence data is now part of the single bin, no separate load needed
+      updateAbsenceModalList();
+    }
+
+    async function saveAbsenceData() {
+      // Absence data is saved as part of the single bin
+      showNotification('Dados de ausência salvos!', 'success');
+    }
+
+    function openAbsenceModal() {
+      const modal = document.getElementById('absenceModal');
+      const select = document.getElementById('absence-member-select');
+      select.innerHTML = '<option value="">Selecione um membro</option>';
+
+      const sortedMembers = Object.values(membrosData).sort((a, b) => a.nome.localeCompare(b.nome));
+      sortedMembers.forEach(member => {
+        const option = document.createElement('option');
+        option.value = member.id;
+        option.textContent = `${member.nome} (ID: ${member.id})`;
+        select.appendChild(option);
+      });
+
+      document.getElementById('absence-start-date').value = '';
+      document.getElementById('absence-end-date').value = '';
+      document.getElementById('absence-reason').value = '';
+
+      updateAbsenceModalList();
+      modal.classList.add('active');
+    }
+
+    function updateAbsenceModalList() {
+      const list = document.getElementById('active-absences-list');
+      list.innerHTML = '';
+      let hasActiveAbsences = false;
+
+      for (const id in absenceData) {
+        const absence = absenceData[id];
+        const member = membrosData[id];
+        if (member && isMemberAbsent(id)) {
+          hasActiveAbsences = true;
+          const listItem = document.createElement('li');
+          listItem.style.marginBottom = '10px';
+          listItem.innerHTML = `
+            <strong>${member.nome} (ID: ${id})</strong><br>
+            Período: ${new Date(absence.startDate).toLocaleDateString('pt-BR')} ${absence.endDate ? 'até ' + new Date(absence.endDate).toLocaleDateString('pt-BR') : 'em diante'}<br>
+            Motivo: ${absence.reason || 'Não informado'}
+          `;
+          list.appendChild(listItem);
+        }
+      }
+
+      if (!hasActiveAbsences) {
+        list.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Nenhuma ausência ativa.</p>';
+      }
+    }
+
+    async function addAbsence() {
+      const memberId = document.getElementById('absence-member-select').value;
+      const startDate = document.getElementById('absence-start-date').value;
+      const endDate = document.getElementById('absence-end-date').value;
+      const reason = document.getElementById('absence-reason').value.trim();
+
+      if (!memberId || !startDate) {
+        showNotification('Selecione um membro e uma data de início para a ausência.', 'error');
+        return;
+      }
+
+      if (endDate && new Date(startDate) > new Date(endDate)) {
+        showNotification('A data de início não pode ser posterior à data de fim.', 'error');
+        return;
+      }
+
+      absenceData[memberId] = { startDate, endDate, reason };
+      await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+      updateAbsenceModalList();
+      showNotification('Ausência registrada com sucesso!', 'success');
+    }
+
+    async function removeAbsence() {
+      const memberId = document.getElementById('absence-member-select').value;
+      if (!memberId) {
+        showNotification('Selecione um membro para remover a ausência.', 'error');
+        return;
+      }
+
+      if (absenceData[memberId]) {
+        delete absenceData[memberId];
+        await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+        updateAbsenceModalList();
+        showNotification('Ausência removida com sucesso!', 'success');
+      } else {
+        showNotification('Este membro não possui ausência registrada.', 'warning');
+      }
+    }
+
+    function getMemberTag(nome, rotasSemana = 0) {
+      const membro = Object.values(membrosData).find(m => m.nome === nome);
+      if (!membro || !membro.cargo) return "";
+
+      let tagsHTML = "";
+      let tagClass = "";
+      let tagText = "";
+
+      switch (membro.cargo) {
+        case "00":
+          tagClass = "tag-00";
+          tagText = "00 - LÍDER";
+          break;
+        case "01":
+          tagClass = "tag-01";
+          tagText = "01 - LÍDER";
+          break;
+        case "02":
+          tagClass = "tag-02";
+          tagText = "02 - LÍDER";
+          break;
+        case "03":
+          tagClass = "tag-03";
+          tagText = "03 - LÍDER";
+          break;
+        case "ELITE":
+          tagClass = "tag-elite";
+          tagText = "ELITE";
+          break;
+        case "MEMBRO":
+          tagClass = "tag-membro";
+          tagText = "MEMBRO";
+          break;
+        case "RECRUTA":
+          tagClass = "tag-recruta";
+          tagText = "RECRUTA";
+          break;
+        default:
+          return "";
+      }
+      tagsHTML += `<span class="tag ${tagClass}">${tagText}</span>`;
+
+      if (rotasSemana >= configData.rotasMetaBatida) {
+        tagsHTML += `<span class="tag tag-meta-batida"><i class="fas fa-trophy"></i> META BATIDA</span>`;
+      }
+
+      if (isMemberAbsent(membro.id)) {
+        tagsHTML += `<span class="tag tag-ausencia"><i class="fas fa-calendar-times"></i> AUSÊNCIA</span>`;
+      }
+
+      return tagsHTML;
+    }
+
+    function verificarIDsIncorretos() {
+      const alertsContainer = document.getElementById("id-alerts-container");
+      alertsContainer.innerHTML = "";
+      let hasErrors = false;
+      const errors = [];
+
+      for (const [id, dados] of Object.entries(dadosRecentes)) {
+        const membroExistentePorId = membrosData[id];
+        if (membroExistentePorId) {
+          if (membroExistentePorId.nome.toLowerCase() !== dados.nome.toLowerCase()) {
+            hasErrors = true;
+            errors.push({
+              nomeProcessado: dados.nome,
+              idProcessado: id,
+              nomeCorreto: membroExistentePorId.nome,
+              type: 'name_mismatch'
+            });
+          }
+        } else {
+          const membroExistentePorNome = Object.entries(membrosData).find(([mId, mData]) => mData.nome.toLowerCase() === dados.nome.toLowerCase());
+          if (membroExistentePorNome) {
+            hasErrors = true;
+            errors.push({
+              nomeProcessado: dados.nome,
+              idProcessado: id,
+              nomeCorreto: membroExistentePorNome[1].nome,
+              idCorreto: membroExistentePorNome[0],
+              type: 'id_mismatch'
+            });
+          }
+        }
+      }
+
+      if (hasErrors) {
+        errors.forEach(error => {
+          const alertDiv = document.createElement("div");
+          alertDiv.className = "id-alert";
+          if (error.type === 'id_mismatch') {
+            alertDiv.innerHTML = `
+              <i class="fas fa-exclamation-circle"></i>
+              <span><strong>${error.nomeProcessado}</strong> - ID incorreto: ${error.idProcessado} (o ID correto para ${error.nomeCorreto} é ${error.idCorreto}).</span>
+            `;
+          } else if (error.type === 'name_mismatch') {
+            alertDiv.innerHTML = `
+              <i class="fas fa-exclamation-circle"></i>
+              <span><strong>ID ${error.idProcessado}</strong> - Nome no registro (${error.nomeProcessado}) não corresponde ao nome cadastrado (${error.nomeCorreto}).</span>
+            `;
+          }
+          alertsContainer.appendChild(alertDiv);
+        });
+      }
+      return hasErrors;
+    }
+
+    function detectarNovosMembros() {
+      novosMembrosDetectados = [];
+      for (const [id, dados] of Object.entries(dadosRecentes)) {
+        if (!membrosData[id]) {
+          const membroComMesmoNome = Object.values(membrosData).find(m => m.nome.toLowerCase() === dados.nome.toLowerCase());
+          if (!membroComMesmoNome) {
+            novosMembrosDetectados.push({
+              id: id,
+              nome: dados.nome
+            });
+          }
+        }
+      }
+      return novosMembrosDetectados.length > 0;
+    }
+
+    function mostrarModalNovoMembro() {
+      if (novosMembrosDetectados.length === 0) return;
+
+      const novoMembro = novosMembrosDetectados[0];
+      const modal = document.getElementById("newMemberModal");
+      const selectRole = document.getElementById("new-member-role");
+
+      selectRole.innerHTML = '';
+      CARGOS_DISPONIVEIS.forEach(cargo => {
+        const option = document.createElement('option');
+        option.value = cargo.value;
+        option.textContent = cargo.text;
+        selectRole.appendChild(option);
+      });
+
+      document.getElementById("new-member-name").value = novoMembro.nome;
+      document.getElementById("new-member-id").value = novoMembro.id;
+      selectRole.value = "";
+      modal.classList.add("active");
+    }
+
+    async function adicionarNovoMembroConfirmado() {
+      const modal = document.getElementById("newMemberModal");
+      const nome = document.getElementById("new-member-name").value;
+      const id = document.getElementById("new-member-id").value;
+      const cargo = document.getElementById("new-member-role").value;
+
+      membrosData[id] = { nome, cargo };
+      if (!farmData[id]) {
+        farmData[id] = {
+          nome: nome,
+          rotas: 0,
+          rotasSemana: 0,
+          pagamento: 0,
+          pagamentoSemana: 0,
+          ultimaAtualizacao: new Date().toISOString()
+        };
+      }
+
+      novosMembrosDetectados = novosMembrosDetectados.filter(m => m.id !== id);
+
+      try {
+        await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+        modal.classList.remove("active");
+        showNotification('Membro adicionado com sucesso!', 'success');
+        exibirMembros();
+        if (novosMembrosDetectados.length > 0) {
+          mostrarModalNovoMembro();
+        }
+      } catch (error) {
+        showNotification("Erro ao adicionar membro. Por favor, tente novamente.", "error");
+        console.error("Erro ao adicionar novo membro confirmado:", error);
+      }
+    }
+
+    function cancelarAdicaoNovoMembro() {
+      const modal = document.getElementById("newMemberModal");
+      novosMembrosDetectados.shift();
+      modal.classList.remove("active");
+      if (novosMembrosDetectados.length > 0) {
+        mostrarModalNovoMembro();
+      }
+    }
+
+    function processarRegistros() {
+      const texto = document.getElementById("registros-farm").value;
+      if (!texto.trim()) {
+        showNotification("Cole os registros de farm no campo indicado!", "error");
+        return;
+      }
+
+      const linhas = texto.split('\n');
+      dadosRecentes = {};
+      const dataAtual = new Date().toISOString();
+
+      linhas.forEach(linha => {
+        const padrao1 = /(.+?)\s*\|\s*(\d+)\s*-\s*(\d+)\s*Rotas?/i;
+        const padrao2 = /(.+?)\s*\|\s*(\d+)/i;
+
+        let match = linha.match(padrao1);
+        let rotas = 1;
+
+        if (!match) {
+          match = linha.match(padrao2);
+          if (!match) return;
+        } else {
+          rotas = parseInt(match[3]) || 1;
+        }
+
+        const nome = match[1].trim();
+        const id = match[2].trim();
+
+        if (!dadosRecentes[id]) {
+          dadosRecentes[id] = {
+            nome: nome,
+            rotas: 0,
+            rotasSemana: 0,
+            pagamento: 0,
+            pagamentoSemana: 0,
+            ultimaAtualizacao: dataAtual
+          };
+        }
+        dadosRecentes[id].rotas += Number(rotas);
+        dadosRecentes[id].rotasSemana += Number(rotas);
+        dadosRecentes[id].pagamento = calcularPagamento(dadosRecentes[id].rotas);
+        dadosRecentes[id].pagamentoSemana = calcularPagamento(dadosRecentes[id].rotasSemana);
+      });
+
+      exibirDadosRecentes();
+      verificarIDsIncorretos();
+      if (detectarNovosMembros()) {
+        mostrarModalNovoMembro();
+      }
+
+      document.getElementById("registros-farm").value = "";
+      showNotification(`${Object.keys(dadosRecentes).length} registros processados!`, "success");
+    }
+
+    function exibirDadosRecentes() {
+      const listaRecente = document.getElementById("lista-recente");
+      if (Object.keys(dadosRecentes).length === 0) {
+        listaRecente.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Nenhum dado processado ainda</p>';
+        return;
+      }
+
+      const membrosRecentes = Object.entries(dadosRecentes)
+        .map(([id, dados]) => ({ id, ...dados }))
+        .sort((a, b) => b.rotasSemana - a.rotasSemana);
+
+      listaRecente.innerHTML = '';
+      membrosRecentes.forEach(membro => {
+        const tag = getMemberTag(membro.nome, membro.rotasSemana);
+        const item = document.createElement("div");
+        item.className = "farm-item fade-in";
+        item.innerHTML = `
+          <div class="farm-info">
+            <div class="avatar">${membro.nome.charAt(0).toUpperCase()}</div>
+            <div class="farm-details">
+              <div class="farm-name">${membro.nome}${tag}</div>
+              <div class="farm-id">ID: ${membro.id}</div>
+              <div class="farm-meta" style="font-size: 0.8rem; margin-top: 5px;">
+                ${membro.rotasSemana >= configData.metaSemanal ?
+                  '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Meta batida</span>' :
+                  '<span style="color: var(--danger);"><i class="fas fa-exclamation-circle"></i> Faltam ' + (configData.metaSemanal - membro.rotasSemana) + ' rotas</span>'}
+              </div>
+            </div>
+          </div>
+          <div class="farm-count">
+            ${membro.rotasSemana} Rotas
+            <div class="farm-payment">${formatarMoeda(membro.pagamentoSemana)}</div>
+          </div>
+        `;
+        listaRecente.appendChild(item);
+      });
+    }
+
+    async function salvarDadosCompletosNoBinUnico() {
+      const dadosParaSalvar = {
+        farmData: farmData,
+        membros: membrosData,
+        configData: configData,
+        absenceData: absenceData
+      };
+      await salvarDadosAPI(JSONBIN_SINGLE_URL, dadosParaSalvar);
+    }
+
+    async function salvarDadosCompletos() {
+      try {
+        const hasErrors = verificarIDsIncorretos();
+        if (hasErrors) {
+          showNotification("Existem IDs incorretos no processamento. Corrija antes de salvar.", "error");
+          return false;
+        }
+        if (novosMembrosDetectados.length > 0) {
+          showNotification("Confirme ou cancele a adição de novos membros antes de salvar.", "error");
+          return false;
+        }
+
+        const btnSalvar = document.getElementById("btn-salvar");
+        const originalText = btnSalvar.innerHTML;
+        btnSalvar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+        btnSalvar.disabled = true;
+
+        for (const id in dadosRecentes) {
+          if (!farmData[id]) {
+            farmData[id] = dadosRecentes[id];
+          } else {
+            farmData[id].rotas += dadosRecentes[id].rotas;
+            farmData[id].rotasSemana += dadosRecentes[id].rotasSemana;
+            farmData[id].pagamento = calcularPagamento(farmData[id].rotas);
+            farmData[id].pagamentoSemana = calcularPagamento(farmData[id].rotasSemana);
+            farmData[id].ultimaAtualizacao = new Date().toISOString();
+          }
+          if (!membrosData[id]) {
+            membrosData[id] = {
+              nome: dadosRecentes[id].nome,
+              cargo: ""
+            };
+          } else if (membrosData[id].nome.toLowerCase() !== dadosRecentes[id].nome.toLowerCase()) {
+            membrosData[id].nome = dadosRecentes[id].nome;
+          }
+        }
+
+        await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+        await gerarESalvarResumos(); // Gera os resumos localmente
+
+        dadosRecentes = {};
+        document.getElementById("lista-recente").innerHTML =
+          '<p style="text-align: center; color: var(--text-secondary);">Nenhum dado processado ainda</p>';
+        document.getElementById("id-alerts-container").innerHTML = "";
+
+        btnSalvar.innerHTML = '<i class="fas fa-check"></i> Dados Salvos!';
+        showNotification('Dados salvos com sucesso na nuvem!', 'success');
+        setTimeout(() => {
+          btnSalvar.innerHTML = originalText;
+          btnSalvar.disabled = false;
+        }, 1500);
+        return true;
+      } catch (error) {
+        console.error("Erro ao salvar dados completos:", error);
+        showNotification("Erro ao salvar dados! Verifique sua conexão.", "error");
+        const btnSalvar = document.getElementById("btn-salvar");
+        btnSalvar.innerHTML = originalText;
+        btnSalvar.disabled = false;
+        return false;
+      }
+    }
+
+    async function zerarContagemSemanal() {
+      if (isAdminAuthenticated) {
+        await performZerarContagemSemanal();
+      } else {
+        showPasswordModal(performZerarContagemSemanal, SENHA_ADM);
+      }
+    }
+
+    async function performZerarContagemSemanal() {
+        try {
+          const btn = document.getElementById("btn-zerar-semana");
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Zerando...';
+          btn.disabled = true;
+
+          for (const id in farmData) {
+            farmData[id].rotasSemana = 0;
+            farmData[id].pagamentoSemana = 0;
+          }
+
+          await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+          await gerarESalvarResumos(); // Gera os resumos localmente
+          await carregarEExibirResumos();
+
+          btn.innerHTML = '<i class="fas fa-check"></i> Contagem Zerada!';
+          showNotification('Contagem semanal zerada com sucesso!', 'success');
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+          }, 2000);
+        } catch (error) {
+          console.error("Erro ao zerar contagem:", error);
+          showNotification("Erro ao zerar contagem semanal!", "error");
+          const btn = document.getElementById("btn-zerar-semana");
+          btn.innerHTML = '<i class="fas fa-redo"></i> Tentar Novamente';
+          btn.disabled = false;
+        }
+    }
+
+    function exportarDados() {
+      const dadosParaExportar = {
+        resumoGeral: {
+          totalRotas: Object.values(farmData).reduce((sum, { rotas }) => sum + (rotas || 0), 0),
+          totalRotasSemana: Object.values(farmData).reduce((sum, { rotasSemana }) => sum + (rotasSemana || 0), 0),
+          totalPagamento: Object.values(farmData).reduce((sum, { pagamento }) => sum + (pagamento || 0), 0),
+          totalPagamentoSemana: Object.values(farmData).reduce((sum, { pagamentoSemana }) => sum + (pagamentoSemana || 0), 0),
+          totalMembros: Object.keys(membrosData).length,
+          dataExportacao: new Date().toISOString()
+        },
+        membros: Object.entries(farmData)
+          .filter(([id, _]) => membrosData[id])
+          .map(([id, dados]) => {
+            const membro = membrosData[id];
+            const isAbsent = isMemberAbsent(id);
+            return {
+              nome: membro.nome,
+              id: id,
+              cargo: CARGOS_DISPONIVEIS.find(c => c.value === membro.cargo)?.text || "Sem cargo",
+              rotasTotal: dados.rotas || 0,
+              rotasSemana: dados.rotasSemana || 0,
+              pagamentoTotal: formatarMoeda(dados.pagamento || 0),
+              pagamentoSemana: formatarMoeda(dados.pagamentoSemana || 0),
+              metaBatida: dados.rotasSemana >= configData.rotasMetaBatida ? "Sim" : "Não",
+              faltamRotas: dados.rotasSemana >= configData.metaSemanal ? 0 : configData.metaSemanal - dados.rotasSemana,
+              ausenciaDeclarada: isAbsent ? "Sim" : "Não"
+            };
+          })
+          .sort((a, b) => b.rotasSemana - a.rotasSemana)
+      };
+
+      let textoExportacao = `=== RELATÓRIO DE FARM - SISTEMA DE FARM ===\n\n`;
+      textoExportacao += `Data da Exportação: ${formatarData(dadosParaExportar.resumoGeral.dataExportacao)}\n`;
+      textoExportacao += `Valor por Rota: ${formatarMoeda(configData.valorPorRota)}\n`;
+      textoExportacao += `Meta Semanal: ${configData.metaSemanal} Rotas\n`;
+      textoExportacao += `Rotas para "Meta Batida": ${configData.rotasMetaBatida} Rotas\n\n`;
+
+      textoExportacao += `=== RESUMO GERAL ===\n\n`;
+      textoExportacao += `Total de Rotas (Geral): ${dadosParaExportar.resumoGeral.totalRotas}\n`;
+      textoExportacao += `Total de Rotas (Semana): ${dadosParaExportar.resumoGeral.totalRotasSemana}\n`;
+      textoExportacao += `Pagamento Total (Geral): ${dadosParaExportar.resumoGeral.totalPagamento}\n`;
+      textoExportacao += `Pagamento Total (Semana): ${formatarMoeda(dadosParaExportar.resumoGeral.totalPagamentoSemana)}\n`;
+      textoExportacao += `Total de Membros Cadastrados: ${dadosParaExportar.resumoGeral.totalMembros}\n\n`;
+
+      textoExportacao += `=== DETALHES DOS MEMBROS ===\n\n`;
+      dadosParaExportar.membros.forEach(membro => {
+        textoExportacao += `Nome: ${membro.nome}\n`;
+        textoExportacao += `ID: ${membro.id}\n`;
+        textoExportacao += `Cargo: ${membro.cargo}\n`;
+        textoExportacao += `Rotas (Total): ${membro.rotasTotal}\n`;
+        textoExportacao += `Rotas (Semana): ${membro.rotasSemana}\n`;
+        textoExportacao += `Pagamento (Total): ${membro.pagamentoTotal}\n`;
+        textoExportacao += `Pagamento (Semana): ${membro.pagamentoSemana}\n`;
+        textoExportacao += `Meta Batida: ${membro.metaBatida}\n`;
+        if (membro.metaBatida === "Não") {
+          textoExportacao += `Faltam Rotas para Meta: ${membro.faltamRotas}\n`;
+        }
+        textoExportacao += `Ausência Declarada: ${membro.ausenciaDeclarada}\n`;
+        textoExportacao += `\n`;
+      });
+
+      const blob = new Blob([textoExportacao], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `sistema-farm-resumo-${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showNotification('Dados exportados como arquivo de texto!', 'success');
+      return textoExportacao;
+    }
+
+    function exibirMembros() {
+      const listaMembros = document.getElementById("lista-membros");
+      if (Object.keys(membrosData).length === 0) {
+        listaMembros.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Nenhum membro cadastrado</p>';
+        return;
+      }
+
+      const membrosArray = Object.entries(membrosData)
+        .map(([id, dados]) => ({ id, ...dados }))
+        .sort((a, b) => a.nome.localeCompare(b.nome));
+
+      listaMembros.innerHTML = '';
+      membrosArray.forEach(membro => {
+        let selectOptions = '';
+        CARGOS_DISPONIVEIS.forEach(cargo => {
+          const option = document.createElement('option');
+          option.value = cargo.value;
+          option.textContent = cargo.text;
+          selectOptions += `<option value="${cargo.value}" ${membro.cargo === cargo.value ? "selected" : ""}>${cargo.text}</option>`;
+        });
+
+        const card = document.createElement("div");
+        card.className = "member-card fade-in";
+        card.innerHTML = `
+          <div class="member-header">
+            <div class="member-name">${membro.nome}</div>
+            <div class="member-id">ID: ${membro.id}</div>
+          </div>
+          <div class="form-group">
+            <label>Cargo/Tag:</label>
+            <select class="membro-cargo" data-id="${membro.id}" style="width: 100%;">
+              ${selectOptions}
+            </select>
+          </div>
+          <div class="member-actions">
+            <button class="btn btn-danger btn-sm btn-remover-membro" data-id="${membro.id}">
+              <i class="fas fa-trash-alt"></i> Remover
+            </button>
+          </div>
+        `;
+        listaMembros.appendChild(card);
+      });
+
+      document.querySelectorAll('.membro-cargo').forEach(select => {
+        select.addEventListener('change', async function() {
+          const id = this.getAttribute('data-id');
+          membrosData[id].cargo = this.value;
+          try {
+            await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+            showNotification('Cargo do membro atualizado com sucesso!', 'success');
+          } catch (error) {
+            showNotification("Erro ao atualizar cargo. Por favor, tente novamente.", "error");
+            console.error("Erro ao atualizar cargo do membro:", error);
+          }
+        });
+      });
+
+      document.querySelectorAll('.btn-remover-membro').forEach(btn => {
+        btn.addEventListener('click', async function() {
+          const id = this.getAttribute('data-id');
+          if (confirm(`Tem certeza que deseja remover ${membrosData[id].nome} (ID: ${id})?`)) {
+            delete membrosData[id];
+            delete farmData[id];
+            delete absenceData[id];
+            try {
+              await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+              exibirMembros();
+              showNotification('Membro removido com sucesso!', 'success');
+            } catch (error) {
+              console.error("Erro ao remover membro:", error);
+              showNotification("Erro ao remover membro. Por favor, tente novamente.", "error");
+            }
+          }
+        });
+      });
+    }
+
+    function filtrarMembros() {
+      const filtro = document.getElementById("filtro-membros").value.toLowerCase();
+      const cards = document.querySelectorAll(".member-card");
+      cards.forEach(card => {
+        const nome = card.querySelector(".member-name").textContent.toLowerCase();
+        const id = card.querySelector(".member-id").textContent.toLowerCase();
+        if (nome.includes(filtro) || id.includes(filtro)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    async function adicionarMembro() {
+      const nome = document.getElementById("novo-membro-nome").value.trim();
+      const id = document.getElementById("novo-membro-id").value.trim();
+      const cargo = document.getElementById("novo-membro-cargo").value;
+
+      if (!nome || !id) {
+        showNotification("Preencha pelo menos o nome e o ID do membro!", "error");
+        return;
+      }
+
+      if (membrosData[id]) {
+        showNotification("Já existe um membro com este ID!", "error");
+        return;
+      }
+
+      membrosData[id] = { nome, cargo };
+      if (!farmData[id]) {
+        farmData[id] = {
+          nome: nome,
+          rotas: 0,
+          rotasSemana: 0,
+          pagamento: 0,
+          pagamentoSemana: 0,
+          ultimaAtualizacao: new Date().toISOString()
+        };
+      }
+
+      try {
+        await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+        document.getElementById("novo-membro-nome").value = "";
+        document.getElementById("novo-membro-id").value = "";
+        document.getElementById("novo-membro-cargo").value = "";
+        exibirMembros();
+        showNotification('Membro adicionado com sucesso!', 'success');
+      } catch (error) {
+        showNotification("Erro ao adicionar membro. Por favor, tente novamente.", "error");
+        console.error("Erro ao adicionar membro:", error);
+      }
+    }
+
+    async function adicionarMembrosEmMassa() {
+      const texto = document.getElementById("novos-membros-em-massa").value.trim();
+      if (!texto) {
+        showNotification("Cole a lista de membros no formato: Nome | ID", "error");
+        return;
+      }
+
+      const linhas = texto.split('\n');
+      const novosMembros = [];
+      const erros = [];
+
+      linhas.forEach(linha => {
+        const partes = linha.split('|').map(p => p.trim());
+        if (partes.length === 2 && partes[0] && partes[1]) {
+          const nome = partes[0];
+          const id = partes[1];
+
+          if (membrosData[id]) {
+            erros.push(`ID ${id} já existe (${membrosData[id].nome})`);
+            return;
+          }
+          const membroExistente = Object.values(membrosData).find(m => m.nome.toLowerCase() === nome.toLowerCase());
+          if (membroExistente) {
+            erros.push(`Nome "${nome}" já existe (ID: ${Object.entries(membrosData).find(([_, m]) => m.nome.toLowerCase() === nome.toLowerCase())[0]})`);
+            return;
+          }
+          novosMembros.push({ nome, id });
+        }
+      });
+
+      if (erros.length > 0) {
+        alert("Erros encontrados:\n\n" + erros.join("\n") + "\n\nCorrija antes de continuar.");
+        return;
+      }
+
+      if (novosMembros.length === 0) {
+        showNotification("Nenhum membro válido encontrado para adicionar.", "error");
+        return;
+      }
+
+      if (confirm(`Deseja adicionar ${novosMembros.length} novos membros?\n\nEles serão adicionados como "MEMBRO" por padrão.`)) {
+        try {
+          const btn = document.getElementById("btn-adicionar-em-massa");
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+          btn.disabled = true;
+
+          novosMembros.forEach(membro => {
+            membrosData[membro.id] = {
+              nome: membro.nome,
+              cargo: "MEMBRO"
+            };
+            if (!farmData[membro.id]) {
+              farmData[membro.id] = {
+                nome: membro.nome,
+                rotas: 0,
+                rotasSemana: 0,
+                pagamento: 0,
+                pagamentoSemana: 0,
+                ultimaAtualizacao: new Date().toISOString()
+              };
+            }
+          });
+
+          await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+          exibirMembros();
+          document.getElementById("novos-membros-em-massa").value = "";
+          btn.innerHTML = '<i class="fas fa-check"></i> Membros Adicionados!';
+          showNotification(`${novosMembros.length} membros adicionados com sucesso!`, 'success');
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+          }, 2000);
+        } catch (error) {
+          console.error("Erro ao adicionar membros em massa:", error);
+          showNotification("Erro ao salvar os novos membros. Por favor, tente novamente.", "error");
+          const btn = document.getElementById("btn-adicionar-em-massa");
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }
+      }
+    }
+
+    async function detectorInteligente() {
+      const btn = document.getElementById("btn-detector-inteligente");
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Detectando...';
+      btn.disabled = true;
+
+      try {
+        await carregarEExibirResumos(); // Garante que os resumos estão atualizados
+        const resumoMembrosContainer = document.getElementById("resumo-membros-container");
+        resumoMembrosContainer.innerHTML = '';
+
+        const membrosSemFarm = [];
+        const membrosComFarm = [];
+
+        const resumos = resumosData; // Usa os resumos gerados localmente
+        const idsComFarm = new Set(resumos.membros.map(m => m.id));
+
+        for (const id in membrosData) {
+          const membro = membrosData[id];
+          const farmInfo = farmData[id] || { rotasSemana: 0, pagamentoSemana: 0 };
+          const isAbsent = isMemberAbsent(id);
+
+          if (isAbsent) {
+            membrosSemFarm.push({
+              id: id,
+              nome: membro.nome,
+              cargo: membro.cargo,
+              rotasSemana: farmInfo.rotasSemana,
+              pagamentoSemana: farmInfo.pagamentoSemana,
+              isAbsent: true
+            });
+          } else if (!idsComFarm.has(id) || farmInfo.rotasSemana === 0) {
+            membrosSemFarm.push({
+              id: id,
+              nome: membro.nome,
+              cargo: membro.cargo,
+              rotasSemana: farmInfo.rotasSemana,
+              pagamentoSemana: farmInfo.pagamentoSemana,
+              isAbsent: false
+            });
+          } else {
+            membrosComFarm.push({
+              id: id,
+              nome: membro.nome,
+              cargo: membro.cargo,
+              rotasSemana: farmInfo.rotasSemana,
+              pagamentoSemana: farmInfo.pagamentoSemana,
+              isAbsent: false
+            });
+          }
+        }
+
+        const membrosParaAlertar = membrosSemFarm.filter(m => !m.isAbsent);
+
+        if (membrosParaAlertar.length > 0) {
+          resumoMembrosContainer.innerHTML += `
+            <div class="resumo-card" style="border-left-color: var(--danger); margin-bottom: 20px;">
+              <h3><i class="fas fa-exclamation-triangle"></i> Membros Sem Farm Semanal (Atenção!)</h3>
+              <p style="color: var(--text-secondary);">Estes membros estão cadastrados, mas não entregaram farm esta semana ou têm 0 rotas e NÃO declararam ausência.</p>
+            </div>
+          `;
+          membrosParaAlertar.sort((a, b) => a.nome.localeCompare(b.nome)).forEach(membro => {
+            const tag = getMemberTag(membro.nome, membro.rotasSemana);
+            const item = document.createElement("div");
+            item.className = "farm-item fade-in";
+            item.style.borderLeft = '4px solid var(--danger)';
+            item.innerHTML = `
+              <div class="farm-info">
+                <div class="avatar">${membro.nome.charAt(0).toUpperCase()}</div>
+                <div class="farm-details">
+                  <div class="farm-name">${membro.nome}${tag}</div>
+                  <div class="farm-id">ID: ${membro.id}</div>
+                  <div class="farm-meta" style="font-size: 0.8rem; margin-top: 5px;">
+                    <span style="color: var(--danger);"><i class="fas fa-times-circle"></i> Não entregou farm</span>
+                  </div>
+                </div>
+              </div>
+              <div class="farm-count">
+                ${membro.rotasSemana} Rotas
+                <div class="farm-payment">${formatarMoeda(membro.pagamentoSemana)}</div>
+              </div>
+            `;
+            resumoMembrosContainer.appendChild(item);
+          });
+        } else {
+          resumoMembrosContainer.innerHTML += `
+            <div class="resumo-card" style="border-left-color: var(--success); margin-bottom: 20px;">
+              <h3><i class="fas fa-check-circle"></i> Todos os Membros Ativos Entregaram Farm!</h3>
+              <p style="color: var(--text-secondary);">Todos os membros cadastrados e ativos entregaram farm esta semana.</p>
+            </div>
+          `;
+        }
+
+        const membrosAusentes = membrosSemFarm.filter(m => m.isAbsent);
+        if (membrosAusentes.length > 0) {
+          resumoMembrosContainer.innerHTML += `
+            <div class="resumo-card" style="border-left-color: var(--warning); margin-top: 30px; margin-bottom: 20px;">
+              <h3><i class="fas fa-calendar-times"></i> Membros com Ausência Declarada</h3>
+              <p style="color: var(--text-secondary);">Estes membros estão ausentes e, portanto, não são esperados para farmar.</p>
+            </div>
+          `;
+          membrosAusentes.sort((a, b) => a.nome.localeCompare(b.nome)).forEach(membro => {
+            const tag = getMemberTag(membro.nome, membro.rotasSemana);
+            const item = document.createElement("div");
+            item.className = "farm-item fade-in";
+            item.style.borderLeft = '4px solid var(--warning)';
+            item.innerHTML = `
+              <div class="farm-info">
+                <div class="avatar">${membro.nome.charAt(0).toUpperCase()}</div>
+                <div class="farm-details">
+                  <div class="farm-name">${membro.nome}${tag}</div>
+                  <div class="farm-id">ID: ${membro.id}</div>
+                  <div class="farm-meta" style="font-size: 0.8rem; margin-top: 5px;">
+                    <span style="color: var(--warning);"><i class="fas fa-calendar-times"></i> Ausência Declarada</span>
+                  </div>
+                </div>
+              </div>
+              <div class="farm-count">
+                ${membro.rotasSemana} Rotas
+                <div class="farm-payment">${formatarMoeda(membro.pagamentoSemana)}</div>
+              </div>
+            `;
+            resumoMembrosContainer.appendChild(item);
+          });
+        }
+
+        if (membrosComFarm.length > 0) {
+          resumoMembrosContainer.innerHTML += `
+            <div class="resumo-card" style="border-left-color: var(--accent); margin-top: 30px; margin-bottom: 20px;">
+              <h3><i class="fas fa-check-double"></i> Membros Com Farm Semanal</h3>
+              <p style="color: var(--text-secondary);">Estes membros entregaram farm esta semana.</p>
+            </div>
+          `;
+          membrosComFarm.sort((a, b) => b.rotasSemana - a.rotasSemana).forEach(membro => {
+            const tag = getMemberTag(membro.nome, membro.rotasSemana);
+            const item = document.createElement("div");
+            item.className = "farm-item fade-in";
+            item.style.borderLeft = membro.rotasSemana >= configData.metaSemanal ? '4px solid var(--success)' : '4px solid var(--warning)';
+            item.innerHTML = `
+              <div class="farm-info">
+                <div class="avatar">${membro.nome.charAt(0).toUpperCase()}</div>
+                <div class="farm-details">
+                  <div class="farm-name">${membro.nome}${tag}</div>
+                  <div class="farm-id">ID: ${membro.id}</div>
+                  <div class="farm-meta" style="font-size: 0.8rem; margin-top: 5px;">
+                    ${membro.rotasSemana >= configData.metaSemanal ?
+                      '<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Meta batida</span>' :
+                      '<span style="color: var(--warning);"><i class="fas fa-exclamation-circle"></i> Faltam ' + (configData.metaSemanal - membro.rotasSemana) + ' rotas para a meta</span>'}
+                  </div>
+                </div>
+              </div>
+              <div class="farm-count">
+                ${membro.rotasSemana} Rotas
+                <div class="farm-payment">${formatarMoeda(membro.pagamentoSemana)}</div>
+              </div>
+            `;
+            resumoMembrosContainer.appendChild(item);
+          });
+        }
+
+        renderFarmChart(membrosComFarm.concat(membrosParaAlertar).sort((a, b) => b.rotasSemana - a.rotasSemana));
+        showNotification('Detector inteligente concluído!', 'success');
+      } catch (error) {
+        console.error("Erro no detector inteligente:", error);
+        showNotification("Erro ao executar detector inteligente. Tente novamente.", "error");
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    async function loadConfigData() {
+      // Config data is now part of the single bin, no separate load needed
+      document.getElementById('config-valor-rota').value = configData.valorPorRota;
+      document.getElementById('config-meta-semanal').value = configData.metaSemanal;
+      document.getElementById('config-meta-batida-rotas').value = configData.rotasMetaBatida;
+      document.getElementById('discord-webhook-url').value = configData.webhookUrl;
+      document.getElementById('webhook-send-general-summary').checked = configData.webhookSendGeneralSummary;
+      document.getElementById('webhook-send-no-farm-members').checked = configData.webhookSendNoFarmMembers;
+      document.getElementById('webhook-send-top-performers').checked = configData.webhookSendTopPerformers;
+      document.getElementById('webhook-send-all-members-list').checked = configData.webhookSendAllMembersList;
+      document.getElementById('webhook-send-config-summary').checked = configData.webhookSendConfigSummary;
+      document.getElementById('webhook-enable-export-button').checked = configData.webhookEnableExportButton;
+      const formatRadio = document.getElementById(`webhook-format-${configData.webhookExportFormat}`);
+      if (formatRadio) {
+          formatRadio.checked = true;
+      } else {
+          document.getElementById('webhook-format-text').checked = true;
+          configData.webhookExportFormat = "text";
+      }
+      updateDynamicText();
+    }
+
+    async function saveConfigData() {
+      try {
+        configData.valorPorRota = parseInt(document.getElementById('config-valor-rota').value) || 15000;
+        configData.metaSemanal = parseInt(document.getElementById('config-meta-semanal').value) || 10;
+        configData.rotasMetaBatida = parseInt(document.getElementById('config-meta-batida-rotas').value) || 10;
+        configData.webhookUrl = document.getElementById('discord-webhook-url').value.trim();
+        configData.webhookSendGeneralSummary = document.getElementById('webhook-send-general-summary').checked;
+        configData.webhookSendNoFarmMembers = document.getElementById('webhook-send-no-farm-members').checked;
+        configData.webhookSendTopPerformers = document.getElementById('webhook-send-top-performers').checked;
+        configData.webhookSendAllMembersList = document.getElementById('webhook-send-all-members-list').checked;
+        configData.webhookSendConfigSummary = document.getElementById('webhook-send-config-summary').checked;
+        configData.webhookEnableExportButton = document.getElementById('webhook-enable-export-button').checked;
+        configData.webhookExportFormat = document.querySelector('input[name="webhook-export-format"]:checked').value;
+
+        await salvarDadosCompletosNoBinUnico(); // Salva no bin único
+        updateDynamicText();
+        showNotification('Configurações salvas com sucesso!', 'success');
+      } catch (error) {
+        console.error("Erro ao salvar configurações:", error);
+        showNotification('Erro ao salvar configurações!', 'error');
+      }
+    }
+
+    function updateDynamicText() {
+      document.getElementById('guide-valor-rota').textContent = configData.valorPorRota.toLocaleString('pt-BR');
+      document.getElementById('guide-valor-2rotas').textContent = (configData.valorPorRota * 2).toLocaleString('pt-BR');
+      document.getElementById('guide-meta-rotas').textContent = configData.metaSemanal;
+      document.getElementById('guide-meta-batida-rotas').textContent = configData.rotasMetaBatida;
+    }
+
+    async function sendReportToDiscord() {
+      if (!configData.webhookUrl) {
+        showNotification("URL do Webhook do Discord não configurada na página de Administração.", "warning");
+        return;
+      }
+
+      let content = "";
+      let embeds = [];
+      let fileContent = "";
+
+      await gerarESalvarResumos(); // Garante que os resumos estão atualizados
+      const resumos = resumosData; // Usa os resumos gerados localmente
+
+      const dataExportacao = formatarData(new Date().toISOString());
+
+      fileContent += `=== RELATÓRIO DE FARM - SISTEMA DE FARM ===\n`;
+      fileContent += `Data da Exportação: ${dataExportacao}\n`;
+      fileContent += `Valor por Rota: ${formatarMoeda(configData.valorPorRota)}\n`;
+      fileContent += `Meta Semanal: ${configData.metaSemanal} Rotas\n`;
+      fileContent += `Rotas para "Meta Batida": ${configData.rotasMetaBatida} Rotas\n\n`;
+
+      if (configData.webhookSendGeneralSummary) {
+        const generalSummaryText = `**Relatório de Farm Semanal - ${dataExportacao}**\n\n` +
+                                   `**Resumo Geral:**\n` +
+                                   `- Período: ${resumos.geral?.inicioSemana ? formatarData(resumos.geral.inicioSemana) : 'N/A'} a ${resumos.geral?.dataAtualizacao ? formatarData(resumos.geral.dataAtualizacao) : 'N/A'}\n` +
+                                   `- Meta Semanal (por membro): ${configData.metaSemanal} Rotas\n` +
+                                   `- Total de Rotas (semana): ${resumos.geral?.totalRotasSemana || 0}\n` +
+                                   `- Pagamento Total (semana): ${formatarMoeda(resumos.geral?.totalPagamentoSemana || 0)}\n` +
+                                   `- Média por membro: ${resumos.geral?.totalMembros ? (resumos.geral.totalRotasSemana / resumos.geral.totalMembros).toFixed(1) : 0} Rotas\n\n`;
+        content += generalSummaryText;
+        fileContent += `=== RESUMO GERAL ===\n${generalSummaryText.replace(/\*\*/g, '').replace(/^- /gm, '')}\n`;
+      }
+
+      if (configData.webhookSendNoFarmMembers) {
+        const membrosSemFarm = [];
+        const resumosMembrosIds = new Set(resumos.membros.map(m => m.id));
+        for (const id in membrosData) {
+          const membro = membrosData[id];
+          const farmInfo = farmData[id] || { rotasSemana: 0 };
+          const isAbsent = isMemberAbsent(id);
+          if (!isAbsent && (!resumosMembrosIds.has(id) || farmInfo.rotasSemana === 0)) {
+            membrosSemFarm.push(membro.nome);
+          }
+        }
+        if (membrosSemFarm.length > 0) {
+          const noFarmText = "Os seguintes membros cadastrados não entregaram farm esta semana:\n" + membrosSemFarm.map(name => `- ${name}`).join('\n');
+          embeds.push({
+            title: "Membros Sem Farm Semanal (Não Ausentes)",
+            description: noFarmText,
+            color: 15158332
+          });
+          fileContent += `=== MEMBROS SEM FARM SEMANAL (NÃO AUSENTES) ===\n${noFarmText.replace(/^- /gm, '')}\n\n`;
+        }
+      }
+
+      if (configData.webhookSendTopPerformers) {
+        const topPerformers = resumos.membros
+          .filter(m => membrosData[m.id] && membrosData[m.id].nome === m.nome && !isMemberAbsent(m.id))
+          .sort((a, b) => b.totalRotasSemana - a.totalRotasSemana)
+          .slice(0, 5);
+        if (topPerformers.length > 0) {
+          let topPerformersText = "**Top 5 Membros (Rotas Semanais):**\n";
+          let topPerformersFileText = "=== TOP 5 MEMBROS (ROTAS SEMANAIS) ===\n";
+          topPerformers.forEach((membro, index) => {
+            topPerformersText += `${index + 1}. **${membro.nome}** - ${membro.totalRotasSemana} Rotas (${formatarMoeda(membro.totalPagamentoSemana)})\n`;
+            topPerformersFileText += `${index + 1}. ${membro.nome} - ${membro.totalRotasSemana} Rotas (${formatarMoeda(membro.totalPagamentoSemana)})\n`;
+          });
+          embeds.push({
+            title: "Top Desempenho Semanal",
+            description: topPerformersText,
+            color: 16776960
+          });
+          fileContent += `${topPerformersFileText}\n`;
+        }
+      }
+
+      if (configData.webhookSendAllMembersList) {
+        const allMembers = Object.entries(membrosData)
+          .map(([id, dados]) => ({
+            ...dados,
+            id,
+            farmInfo: farmData[id] || { rotasSemana: 0, pagamentoSemana: 0 }
+          }))
+          .sort((a, b) => a.nome.localeCompare(b.nome));
+        if (allMembers.length > 0) {
+          let allMembersText = "**Lista Completa de Membros (" + allMembers.length + "):**\n";
+          let allMembersFileText = "=== LISTA COMPLETA DE MEMBROS CADASTRADOS ===\n";
+          allMembers.forEach(membro => {
+            const cargoText = CARGOS_DISPONIVEIS.find(c => c.value === membro.cargo)?.text || "Sem Tag";
+            allMembersText += `- **${membro.nome}** (ID: ${membro.id}) - Cargo: ${cargoText}\n`;
+            allMembersFileText += `- ${membro.nome} (ID: ${membro.id}) - Cargo: ${cargoText}\n`;
+          });
+          embeds.push({
+            title: "Membros Cadastrados",
+            description: allMembersText,
+            color: 65535
+          });
+          fileContent += `${allMembersFileText}\n`;
+        }
+      }
+
+      if (configData.webhookSendConfigSummary) {
+        const configSummaryText = `**Configurações Atuais do Sistema:**\n` +
+                                  `- Valor por Rota: ${formatarMoeda(configData.valorPorRota)}\n` +
+                                  `- Meta Semanal: ${configData.metaSemanal} Rotas\n` +
+                                  `- Rotas para "Meta Batida": ${configData.rotasMetaBatida} Rotas\n`;
+        embeds.push({
+          title: "Configurações do Sistema",
+          description: configSummaryText,
+          color: 10079487
+        });
+        fileContent += `=== CONFIGURAÇÕES DO SISTEMA ===\n${configSummaryText.replace(/\*\*/g, '').replace(/^- /gm, '')}\n\n`;
+      }
+
+      if (content === "" && embeds.length === 0 && configData.webhookExportFormat === "text") {
+        showNotification("Nenhuma opção de relatório selecionada para o Webhook. Configure na página de Administração.", "warning");
+        return;
+      }
+
+      try {
+        let payload = {};
+        if (configData.webhookExportFormat === "text") {
+          payload = { content: content, embeds: embeds };
+        } else {
+          const blob = new Blob([fileContent], { type: 'text/plain' });
+          const formData = new FormData();
+          formData.append('file', blob, `relatorio_farm_${new Date().toISOString().split('T')[0]}.txt`);
+          formData.append('payload_json', JSON.stringify({ content: "Relatório de Farm em anexo:" }));
+          payload = formData;
+        }
+
+        const response = await fetch(configData.webhookUrl, {
+          method: 'POST',
+          headers: configData.webhookExportFormat === "text" ? { 'Content-Type': 'application/json' } : {},
+          body: configData.webhookExportFormat === "text" ? JSON.stringify(payload) : payload,
+        });
+
+        if (response.ok) {
+          showNotification('Relatório enviado para o Discord!', 'success');
+        } else {
+          const errorText = await response.text();
+          throw new Error(`Erro ao enviar para o Discord: ${response.status} - ${errorText}`);
+        }
+      } catch (error) {
+        console.error("Erro ao enviar webhook:", error);
+        showNotification(`Falha ao enviar relatório para o Discord: ${error.message}`, 'error');
+      }
+    }
+
+    async function testWebhook() {
+      if (!configData.webhookUrl) {
+        showNotification("URL do Webhook do Discord não configurada.", "warning");
+        return;
+      }
+
+      const testContent = "Teste de conexão do Sistema de Farm com o Discord Webhook. Se você está vendo esta mensagem, a conexão está funcionando!";
+      const testEmbed = {
+        title: "Teste de Webhook Concluído",
+        description: "Esta é uma mensagem de teste do seu sistema de farm. A conexão com o Discord está OK!",
+        color: 65280
+      };
+
+      try {
+        let payload = {};
+        let headers = {};
+
+        if (configData.webhookExportFormat === "text") {
+          payload = JSON.stringify({
+            content: testContent,
+            embeds: [testEmbed]
+          });
+          headers['Content-Type'] = 'application/json';
+        } else {
+          const blob = new Blob([testContent + "\n\n" + testEmbed.title + "\n" + testEmbed.description], { type: 'text/plain' });
+          const formData = new FormData();
+          formData.append('file', blob, `webhook_test_${new Date().toISOString().split('T')[0]}.txt`);
+          formData.append('payload_json', JSON.stringify({ content: "Teste de Webhook em anexo:" }));
+          payload = formData;
+        }
+
+        const response = await fetch(configData.webhookUrl, {
+          method: 'POST',
+          headers: headers,
+          body: payload,
+        });
+
+        if (response.ok) {
+          showNotification('Teste de Webhook enviado com sucesso!', 'success');
+        } else {
+          const errorText = await response.text();
+          throw new Error(`Erro ao enviar teste para o Discord: ${response.status} - ${errorText}`);
+        }
+      } catch (error) {
+        console.error("Erro ao testar webhook:", error);
+        showNotification(`Falha ao testar webhook: ${error.message}`, 'error');
+      }
+    }
+
+    function showPasswordModal(callback, senhaEsperada = SENHA_ADM) {
+      if (isAdminAuthenticated) {
+        callback();
+        return;
+      }
+
+      const modal = document.getElementById("passwordModal");
+      const input = document.getElementById("modalPassword");
+      const confirmBtn = document.getElementById("confirmPassword");
+
+      modal.classList.add("active");
+      input.value = "";
+      input.focus();
+
+      const oldConfirmHandler = confirmBtn._eventHandler;
+      if (oldConfirmHandler) confirmBtn.removeEventListener("click", oldConfirmHandler);
+      const oldCloseHandler = document.getElementById("closePasswordModal")._eventHandler;
+      if (oldCloseHandler) document.getElementById("closePasswordModal").removeEventListener("click", oldCloseHandler);
+      const oldKeydownHandler = input._eventHandler;
+      if (oldKeydownHandler) input.removeEventListener("keydown", oldKeydownHandler);
+
+      function handleConfirm() {
+        if (input.value === senhaEsperada) {
+          modal.classList.remove("active");
+          isAdminAuthenticated = true;
+          callback();
+        } else {
+          showNotification("Senha incorreta!", "error");
+          input.value = "";
+          input.focus();
+        }
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+      }
+
+      confirmBtn.addEventListener("click", handleConfirm);
+      confirmBtn._eventHandler = handleConfirm;
+
+      document.getElementById("closePasswordModal").addEventListener("click", closeModal);
+      document.getElementById("closePasswordModal")._eventHandler = closeModal;
+
+      input.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+          handleConfirm();
+        }
+      });
+      input._eventHandler = handleConfirm;
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const populateCargoSelects = () => {
+        document.querySelectorAll('#new-member-role, #novo-membro-cargo').forEach(select => {
+          select.innerHTML = '';
+          CARGOS_DISPONIVEIS.forEach(cargo => {
+            const option = document.createElement('option');
+            option.value = cargo.value;
+            option.textContent = cargo.text;
+            select.appendChild(option);
+          });
+        });
+      };
+      populateCargoSelects();
+
+      try {
+        const loadedData = await carregarDadosAPI(JSONBIN_SINGLE_LATEST);
+        farmData = loadedData.farmData || {};
+        membrosData = loadedData.membros || {};
+        configData = { ...configData, ...loadedData.configData };
+        absenceData = loadedData.absenceData || {};
+        exibirMembros();
+        updateDynamicText();
+      } catch (error) {
+        console.error("Erro na inicialização:", error);
+        document.getElementById("lista-membros").innerHTML = `
+          <div style="background: rgba(255, 76, 76, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid var(--danger);">
+            <p><i class="fas fa-exclamation-triangle"></i> <strong>Erro ao carregar dados de membros:</strong></p>
+            <p>${error.message}</p>
+            <p>Isso pode ocorrer se o bin de dados estiver vazio, incorreto ou se houver problemas de conexão.</p>
+            <p>Por favor, verifique o ID do bin principal e sua conexão com a internet.</p>
+          </div>
+        `;
+        showNotification("Erro ao carregar dados iniciais", "error");
+      }
+
+      document.getElementById("btn-processar").addEventListener("click", processarRegistros);
+      document.getElementById("btn-salvar").addEventListener("click", () => {
+        if (isAdminAuthenticated) {
+          salvarDadosCompletos();
+        } else {
+          showPasswordModal(salvarDadosCompletos);
+        }
+      });
+      document.getElementById("btn-adicionar-membro").addEventListener("click", () => {
+        if (isAdminAuthenticated) {
+          adicionarMembro();
+        } else {
+          showPasswordModal(adicionarMembro);
+        }
+      });
+      document.getElementById("btn-adicionar-em-massa").addEventListener("click", () => {
+        if (isAdminAuthenticated) {
+          adicionarMembrosEmMassa();
+        } else {
+          showPasswordModal(adicionarMembrosEmMassa);
+        }
+      });
+      document.getElementById("filtro-membros").addEventListener("input", filtrarMembros);
+      document.getElementById("btn-carregar-resumos").addEventListener("click", carregarEExibirResumos);
+      document.getElementById("btn-zerar-semana").addEventListener("click", zerarContagemSemanal);
+      document.getElementById("btn-exportar-dados").addEventListener("click", exportarDados);
+      document.getElementById("btn-detector-inteligente").addEventListener("click", detectorInteligente);
+      document.getElementById("btn-exportar-discord").addEventListener("click", () => {
+        if (configData.webhookEnableExportButton) {
+          if (isAdminAuthenticated) {
+            sendReportToDiscord();
+          } else {
+            showPasswordModal(sendReportToDiscord, SENHA_ADM);
+          }
+        } else {
+          showNotification("A funcionalidade 'Exportar para Discord' não está habilitada. Ative-a na página de Administração.", "warning");
+        }
+      });
+      document.getElementById("btn-gerenciar-ausencias").addEventListener("click", () => {
+        if (isAdminAuthenticated) {
+          openAbsenceModal();
+        } else {
+          showPasswordModal(openAbsenceModal, SENHA_ADM);
+        }
+      });
+
+      document.getElementById("registros-farm").addEventListener("keydown", function(e) {
+        if (e.ctrlKey && e.key === "Enter") {
+          processarRegistros();
+        }
+      });
+      document.addEventListener("keydown", function(e) {
+        if (e.ctrlKey && e.key === "s") {
+          e.preventDefault();
+          if (isAdminAuthenticated) {
+            salvarDadosCompletos();
+          } else {
+            showPasswordModal(salvarDadosCompletos);
+          }
+        }
+      });
+      document.getElementById("novo-membro-id").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+          if (isAdminAuthenticated) {
+            adicionarMembro();
+          } else {
+            showPasswordModal(adicionarMembro);
+          }
+        }
+      });
+
+      document.getElementById("confirmAddMember").addEventListener("click", () => {
+        adicionarNovoMembroConfirmado();
+      });
+      document.getElementById("cancelAddMember").addEventListener("click", () => {
+        cancelarAdicaoNovoMembro();
+      });
+      document.getElementById("closeNewMemberModal").addEventListener("click", () => {
+        cancelarAdicaoNovoMembro();
+      });
+
+      document.getElementById("closeAbsenceModal").addEventListener("click", () => {
+        document.getElementById('absenceModal').classList.remove('active');
+      });
+      document.getElementById("addAbsenceBtn").addEventListener("click", addAbsence);
+      document.getElementById("removeAbsenceBtn").addEventListener("click", removeAbsence);
+
+      document.querySelectorAll(".nav-tab").forEach(tab => {
+        tab.addEventListener("click", function() {
+          const targetTab = this.dataset.tab;
+          if (targetTab === "pagina-admin") {
+            if (isAdminAuthenticated) {
+              activateAdminTab.call(this, targetTab);
+            } else {
+              showPasswordModal(() => {
+                activateAdminTab.call(this, targetTab);
+              }, SENHA_ADM);
+            }
+          } else {
+            document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+            this.classList.add("active");
+            document.getElementById(targetTab).classList.add("active");
+            if (targetTab === "pagina-resumos") {
+              carregarEExibirResumos();
+            }
+          }
+        });
+      });
+
+      function activateAdminTab(targetTab) {
+        document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        this.classList.add("active");
+        document.getElementById(targetTab).classList.add("active");
+        loadConfigData();
+      }
+
+      document.querySelectorAll(".help-tooltip").forEach(tooltip => {
+        const closeBtn = tooltip.querySelector(".close-help");
+        tooltip.addEventListener("click", function(e) {
+          if (e.target === tooltip || e.target === tooltip.querySelector("i")) {
+            this.classList.toggle("active");
+          }
+        });
+        closeBtn.addEventListener("click", function(e) {
+          e.stopPropagation();
+          tooltip.classList.remove("active");
+        });
+      });
+
+      document.getElementById("btn-voltar-sistema").addEventListener("click", function(e) {
+        e.preventDefault();
+        document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        document.querySelector(".nav-tab[data-tab='pagina-1']").classList.add("active");
+        document.getElementById("pagina-1").classList.add("active");
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      document.getElementById("btn-tour").addEventListener("click", startTour);
+
+      document.getElementById('save-webhook-settings').addEventListener('click', () => {
+        if (isAdminAuthenticated) {
+          saveConfigData();
+        } else {
+          showPasswordModal(saveConfigData, SENHA_ADM);
+        }
+      });
+      document.getElementById('test-webhook').addEventListener('click', () => {
+        if (isAdminAuthenticated) {
+          testWebhook();
+        } else {
+          showPasswordModal(testWebhook, SENHA_ADM);
+        }
+      });
+      document.getElementById('save-config-settings').addEventListener('click', () => {
+        if (isAdminAuthenticated) {
+          saveConfigData();
+        } else {
+          showPasswordModal(saveConfigData, SENHA_ADM);
+        }
+      });
+
+      initParticles();
+    });
+
+    function initParticles() {
+      const container = document.getElementById('particles-js');
+      const particlesCount = 50;
+      for (let i = 0; i < particlesCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.position = 'absolute';
+        particle.style.width = `${Math.random() * 5 + 2}px`;
+        particle.style.height = particle.style.width;
+        particle.style.background = `rgba(${Math.floor(Math.random() * 100 + 156)}, ${Math.floor(Math.random() * 100 + 68)}, ${Math.floor(Math.random() * 150 + 105)}, ${Math.random() * 0.5 + 0.3})`;
+        particle.style.borderRadius = '50%';
+        particle.style.boxShadow = '0 0 10px rgba(142, 68, 255, 0.5)';
+        particle.style.zIndex = '0';
+        container.appendChild(particle);
+        animateParticle(particle);
+      }
+    }
+
+    function animateParticle(particle) {
+      const startX = Math.random() * 100;
+      const startY = Math.random() * 100;
+      const endX = Math.random() * 100;
+      const endY = Math.random() * 100;
+      const duration = Math.random() * 20000 + 10000;
+
+      particle.style.left = `${startX}%`;
+      particle.style.top = `${startY}%`;
+
+      const keyframes = [
+        { transform: `translate(0, 0)` },
+        { transform: `translate(${endX - startX}vw, ${endY - startY}vh)` }
+      ];
+
+      const options = {
+        duration: duration,
+        iterations: Infinity,
+        direction: 'alternate',
+        easing: 'ease-in-out'
+      };
+
+      particle.animate(keyframes, options);
+    }
+  </script>
+</body>
+</html>
